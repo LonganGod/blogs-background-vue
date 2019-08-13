@@ -49,7 +49,7 @@
     name: "public",
     data() {
       return {
-        iconClass: 'el-icon-s-unfold',
+        iconClass: 'el-icon-menu',
         isCollapse: false,  // 导航收起
         navList: [
           {
@@ -116,10 +116,10 @@
       checkIconNav() {
         if (this.isCollapse) {
           this.isCollapse = false
-          this.iconClass = 'el-icon-s-unfold'
+          this.iconClass = 'el-icon-menu'
         } else {
           this.isCollapse = true
-          this.iconClass = 'el-icon-menu'
+          this.iconClass = 'el-icon-s-unfold'
         }
       }
     }
