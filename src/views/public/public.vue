@@ -137,7 +137,7 @@
       background-color: #24292e;
 
       .publicTitle {
-        width: 220px;
+        width: 200px;
         text-align: center;
       }
 
@@ -171,6 +171,8 @@
         width: 100%;
         height: 100%;
         background-color: #fafafa;
+        box-sizing: border-box;
+        padding: 20px;
       }
     }
   }

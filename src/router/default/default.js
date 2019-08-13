@@ -2,6 +2,8 @@ import Login from '../../views/login/login'
 import Public from '../../views/public/public'
 import Home from '../../views/home/home'
 
+import UserRouter from '../user/user'
+
 export default [
   {
     name: 'Login',
@@ -24,7 +26,8 @@ export default [
         name: 'Home',
         path: '/home',
         component: Home,
-      }
+      },
+      ...UserRouter
     ]
   }
 ]
