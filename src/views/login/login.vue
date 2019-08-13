@@ -23,7 +23,7 @@
           show-password
         >
         </el-input>
-        <el-button type="primary">登&emsp;录</el-button>
+        <el-button type="primary" @click="login">登&emsp;录</el-button>
         <div class="clearfix others">
           <span class="left">忘记密码？</span>
           <span class="right" @click="clearInfo">重置</span>
@@ -46,6 +46,9 @@
       clearInfo() {
         this.userName = ''
         this.password = ''
+      },
+      login() {
+        this.$router.push('/public')
       }
     }
   }
