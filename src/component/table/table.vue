@@ -29,7 +29,10 @@
   export default {
     name: "table",
     props: ['config'],
-    methods: {
+    data() {
+    },
+    beforeMount() {
+      console.log(this.config)
     }
   }
 </script>

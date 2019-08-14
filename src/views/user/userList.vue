@@ -12,7 +12,7 @@
 
 <script>
   import WSBreadcrumb from '../../component/breadcrumb/breadcrumb'
-  import WSTable from '../../component/table/table_config'
+  import WSTable from '../../component/table/table'
 
   export default {
     name: "userList",
