@@ -2,6 +2,7 @@
   <el-table
     :data="config.trObjArr"
     :border="config.borderStyle"
+    :stripe="config.stripe"
     :lazy="config.lazyStyle"
     :load="config.loadFun"
     :row-key="config.rowKey"

@@ -12,7 +12,7 @@
 
 <script>
   import WSBreadcrumb from '../../component/breadcrumb/breadcrumb'
-  import WSTable from '../../component/table/table'
+  import WSTable from '../../component/table/table_config'
 
   export default {
     name: "userList",
@@ -80,6 +80,7 @@
           borderStyle: true,
           lazyStyle: true,
           showCheckbox: true,
+          stripe: false,
           rowKey: 'id',
           handleSelectionChange(val) {
             console.log(val)
