@@ -15,6 +15,7 @@ import {
   BreadcrumbItem,
   Table,
   TableColumn,
+  Tag,
 } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css';
@@ -38,6 +39,7 @@ Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tag)
 
 /* eslint-disable no-new */
 new Vue({
