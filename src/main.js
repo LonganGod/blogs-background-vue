@@ -16,6 +16,7 @@ import {
   Table,
   TableColumn,
   Tag,
+  Pagination,
 } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css';
@@ -40,6 +41,7 @@ Vue.use(BreadcrumbItem)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tag)
+Vue.use(Pagination)
 
 /* eslint-disable no-new */
 new Vue({

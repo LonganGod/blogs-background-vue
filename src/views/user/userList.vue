@@ -56,15 +56,33 @@
         <el-table-column
           prop="createTime"
           label="创建时间"
-          sortable
-          :filters="createTimeFilters"
-          :filter-method="filterCreateTime">
+          sortable>
         </el-table-column>
         <el-table-column
           label="操作"
-          width="150">
+          width="200">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="">删除
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 20]"
+        :page-size="10"
+        layout="total, prev, pager, next, sizes"
+        :total="400">
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -115,26 +133,33 @@
           {text: '注册用户', value: '注册用户'},
           {text: '游客', value: '游客'}
         ],
-        createTimeFilters: [
-          {text: '2019-08-11', value: '2019-08-11'},
-          {text: '2019-08-12', value: '2019-08-12'},
-          {text: '2019-08-13', value: '2019-08-13'},
-          {text: '2019-08-14', value: '2019-08-14'},
-          {text: '2019-08-15', value: '2019-08-15'},
-        ],
+        currentPage: 1
       }
     },
     methods: {
       handleSelectionChange(val) {
         console.log(val)
       },
-      filterCreateTime(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
+      filterUserType(value, row) {
+        let userType = 0
+        switch (value) {
+          case '管理员' :
+            userType = 1
+            break
+          case '注册用户' :
+            userType = 2
+            break
+          case '游客' :
+            userType = 3
+            break
+        }
+        return row.userType === userType;
       },
-      filterUserType(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
       }
     }
   }
