@@ -14,13 +14,15 @@
         style="width: 100%">
         <el-table-column
           type="selection"
-          width="45">
+          width="50"
+          align="center">
         </el-table-column>
         <el-table-column
           sortable
           prop="index"
           label="序号"
-          width="80">
+          width="80"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="userName"
@@ -30,7 +32,8 @@
         <el-table-column
           prop="userType"
           label="用户类型"
-          width="100"
+          width="150"
+          align="center"
           :filters="userTypeFilters"
           :filter-method="filterUserType">
           <template slot-scope="scope">
@@ -60,16 +63,22 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="200">
+          width="200"
+          align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="">编辑
+              type="primary"
+              @click="editUser(scope.row.id)"
+              plain>
+              编辑
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="">删除
+              plain
+              @click="">
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -160,6 +169,10 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+      },
+      editUser(userId) {
+        console.log(userId)
+        location.hash = '/user/userEdit'
       }
     }
   }
