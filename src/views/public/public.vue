@@ -3,7 +3,10 @@
     <header class="publicHead">
       <h4 class="publicTitle left">个人博客 - 后台管理</h4>
       <el-button type="info" :icon="iconClass" class="checkIconNav left" @click="checkIconNav"></el-button>
-      <p class="userInfo right">admin</p>
+      <p class="userInfo right">
+        <el-avatar size="large" :src="icon"></el-avatar>
+        admin
+      </p>
     </header>
     <div class="publicBody">
       <el-menu
@@ -109,7 +112,8 @@
             title: '数据统计',
             icon: 'el-icon-s-data'
           }
-        ]
+        ],
+        icon: require('../../uploads/userIcon/1.jpg')
       }
     },
     methods: {
@@ -175,5 +179,9 @@
         padding: 20px;
       }
     }
+  }
+
+  .el-avatar {
+    margin-right: 10px;
   }
 </style>

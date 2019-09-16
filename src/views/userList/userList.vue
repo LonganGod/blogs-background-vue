@@ -25,9 +25,29 @@
           align="center">
         </el-table-column>
         <el-table-column
+          prop="icon"
+          label="头像"
+          width="100"
+          align="center">
+          <template slot-scope="scope">
+            <el-avatar size="large" :src="scope.row.icon" v-if="scope.row.icon != ''"></el-avatar>
+            <el-avatar size="large" :src="scope.row.icon" v-else>游</el-avatar>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="userName"
           label="用户名"
-          width="300">
+          width="250">
+        </el-table-column>
+        <el-table-column
+          prop="nickName"
+          label="昵称"
+          width="250">
+        </el-table-column>
+        <el-table-column
+          prop="email"
+          label="邮箱"
+          width="250">
         </el-table-column>
         <el-table-column
           prop="userType"
@@ -69,15 +89,15 @@
             <el-button
               size="mini"
               type="primary"
-              @click="editUser(scope.row.id)"
+              @click="details(scope.row.id)"
               plain>
-              编辑
+              查看
             </el-button>
             <el-button
               size="mini"
               type="danger"
               plain
-              @click="">
+              @click="del(scope.row.id)">
               删除
             </el-button>
           </template>
@@ -114,26 +134,38 @@
           {
             id: 1,
             index: 1,
-            userName: '王小虎',
+            icon: require('../../uploads/userIcon/2.jpg'),
+            userName: 'ws123456',
+            nickName: '桂圆上火',
+            email: 'ws15531085321@163.com',
             userType: 2,
             createTime: '2019-08-12'
           }, {
             id: 2,
             index: 2,
+            icon: '',
             userName: '游客K_22323123',
+            nickName: '游客K_22323123',
+            email: '',
             userType: 3,
             createTime: '2019-08-12'
           }, {
             id: 3,
             index: 3,
+            icon: require('../../uploads/userIcon/1.jpg'),
             userName: 'admin',
+            nickName: '超管',
+            email: 'wangshuo@hengtn.com',
             userType: 1,
             createTime: '2019-08-11',
             hasChildren: true
           }, {
             id: 4,
             index: 4,
-            userName: '游客K_345345',
+            icon: '',
+            userName: '游客K_34534532',
+            nickName: '游客K_34534532',
+            email: '',
             userType: 3,
             createTime: '2019-08-15'
           }],
@@ -170,9 +202,29 @@
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
       },
-      editUser(userId) {
+      details(userId) {
+        location.hash = '/user/userDetails'
+      },
+      del(userId) {
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
         console.log(userId)
-        location.hash = '/user/userEdit'
+      },
+      aaa(a) {
+        console.log(a)
       }
     }
   }

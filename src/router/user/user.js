@@ -1,5 +1,5 @@
 import UserList from '../../views/userList/userList'
-import UserEdit from '../../views/userList/userEdit'
+import UserDetails from '../../views/userList/userDetails'
 import UserMsg from '../../views/userMsg/userMsg'
 
 export default [
@@ -9,10 +9,10 @@ export default [
     component: UserList
   },
   {
-    name: 'UserEdit',
-    path: '/user/userEdit',
+    name: 'UserDetails',
+    path: '/user/userDetails',
     param: true,
-    component: UserEdit
+    component: UserDetails
   },
   {
     name: 'UserMsg',

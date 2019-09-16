@@ -17,6 +17,9 @@ import {
   TableColumn,
   Tag,
   Pagination,
+  Avatar,
+  MessageBox,
+  Message,
 } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css';
@@ -42,6 +45,13 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tag)
 Vue.use(Pagination)
+Vue.use(Avatar)
+
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$message = Message
 
 /* eslint-disable no-new */
 new Vue({
