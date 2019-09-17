@@ -3,6 +3,7 @@ import Public from '../../views/public/public'
 import Home from '../../views/home/home'
 
 import UserRouter from '../user/user'
+import ArticleRouter from '../article/article'
 
 export default [
   {
@@ -27,7 +28,8 @@ export default [
         path: '/home',
         component: Home,
       },
-      ...UserRouter
+      ...UserRouter,
+      ...ArticleRouter
     ]
   }
 ]

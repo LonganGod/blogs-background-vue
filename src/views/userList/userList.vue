@@ -4,7 +4,7 @@
       <WSBreadcrumb :linkArr="linkArr"></WSBreadcrumb>
     </el-card>
 
-    <el-card class="box-card userListMain">
+    <el-card class="box-card main-card">
       <el-table
         :data="tdObjArr"
         border
@@ -222,16 +222,10 @@
           });
         });
         console.log(userId)
-      },
-      aaa(a) {
-        console.log(a)
       }
     }
   }
 </script>
 
 <style scoped lang="less">
-  .userListMain {
-    margin-top: 15px;
-  }
 </style>

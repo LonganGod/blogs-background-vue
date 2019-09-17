@@ -20,13 +20,16 @@ import {
   Avatar,
   MessageBox,
   Message,
+  Form,
+  FormItem,
+  Timeline,
+  TimelineItem,
 } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/less/default/base.less';
 import './assets/less/default/default.less';
 import './assets/less/public/public.less';
-import './assets/less/user/user.less';
 
 Vue.config.productionTip = false
 
@@ -46,6 +49,10 @@ Vue.use(TableColumn)
 Vue.use(Tag)
 Vue.use(Pagination)
 Vue.use(Avatar)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

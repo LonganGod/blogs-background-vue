@@ -11,7 +11,7 @@
     <div class="publicBody">
       <el-menu
         default-active="1"
-        class="el-menu-vertical-demo publicNav left"
+        class="el-menu-vertical-demo publicNav"
         background-color="#24292e"
         text-color="#ccc"
         active-text-color="#fff"
@@ -40,7 +40,7 @@
           </el-menu-item>
         </template>
       </el-menu>
-      <div class="publicBodyMain left">
+      <div class="publicBodyMain">
         <router-view></router-view>
       </div>
     </div>
@@ -85,7 +85,7 @@
             children: [
               {
                 index: '3-1',
-                link: '/article/articleCategory',
+                link: '/article/articleCateList',
                 title: '文章分类'
               },
               {
@@ -172,7 +172,7 @@
       }
 
       .publicBodyMain {
-        width: 100%;
+        flex: 1;
         height: 100%;
         background-color: #fafafa;
         box-sizing: border-box;

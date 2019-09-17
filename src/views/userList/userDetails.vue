@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <WSBreadcrumb :linkArr="linkArr"></WSBreadcrumb>
     </el-card>
-    <el-card class="box-card userDetailsMain">
+    <el-card class="box-card main-card">
       <el-row>
         <el-col :span="2">用户头像</el-col>
         <el-col :span="22">
@@ -56,10 +56,6 @@
 </script>
 
 <style scoped lang="less">
-  .userDetailsMain {
-    margin-top: 15px;
-  }
-
   .el-row {
     padding: 10px;
     display: flex;
