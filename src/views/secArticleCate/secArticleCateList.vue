@@ -17,7 +17,7 @@
           <el-button type="primary" class="searchBtn">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="addBtn">新建二级分类</el-button>
+          <el-button type="primary" class="addBtn" @click="addSecCate">新建二级分类</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -37,8 +37,12 @@
           align="center">
         </el-table-column>
         <el-table-column
-          prop="articleCateName"
+          prop="secArticleCateName"
           label="分类名称">
+        </el-table-column>
+        <el-table-column
+          prop="articleCateName"
+          label="所属一级分类">
         </el-table-column>
         <el-table-column
           prop="createTime"
@@ -99,29 +103,34 @@
           {
             id: 1,
             index: 1,
-            articleCateName: 'HTML',
+            secArticleCateName: 'HTML',
+            articleCateName: 'WEB前端',
             createTime: '2019-08-12'
           },
           {
             id: 2,
             index: 2,
-            articleCateName: 'CSS样式',
+            secArticleCateName: 'CSS样式',
+            articleCateName: 'WEB前端',
             createTime: '2019-08-12'
           },
           {
             id: 3,
             index: 3,
-            articleCateName: 'JavaScript',
+            secArticleCateName: 'JavaScript',
+            articleCateName: 'WEB前端',
             createTime: '2019-08-11',
           },
           {
             id: 4,
             index: 4,
-            articleCateName: 'Vue.js',
+            secArticleCateName: 'Vue.js',
+            articleCateName: 'WEB前端',
             createTime: '2019-08-15'
           }
         ],
-        currentPage: 1
+        currentPage: 1,
+        cateName: ''
       }
     },
     methods: {
@@ -133,7 +142,7 @@
       },
       edit(id) {
         console.log(id)
-        // location.hash = '/user/userDetails'
+        location.hash = '/article/EditSecArticleCate'
       },
       del(id) {
         this.$confirm('此操作将永久删除该类目, 是否继续?', '提示', {
@@ -152,6 +161,9 @@
           });
         });
         console.log(id)
+      },
+      addSecCate() {
+        location.hash = '/article/AddSecArticleCate'
       }
     }
   }

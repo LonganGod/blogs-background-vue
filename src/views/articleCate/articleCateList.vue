@@ -17,7 +17,7 @@
           <el-button type="primary" class="searchBtn">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="addBtn">新建一级分类</el-button>
+          <el-button type="primary" class="addBtn" @click="addCate">新建一级分类</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -141,7 +141,7 @@
       },
       edit(id) {
         console.log(id)
-        // location.hash = '/user/userDetails'
+        location.hash = '/article/EditArticleCate'
       },
       del(id) {
         this.$confirm('此操作将永久删除该类目, 是否继续?', '提示', {
@@ -163,6 +163,9 @@
       },
       showSecCate(id) {
         location.hash = '/article/SecArticleCateList'
+      },
+      addCate() {
+        location.hash = '/article/AddArticleCate'
       }
     }
   }
