@@ -133,6 +133,8 @@
 <style scoped lang="less">
   .publicBox {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .publicHead {
       height: 60px;
@@ -156,11 +158,11 @@
     }
 
     .publicBody {
-      display: flex;
-      height: 100%;
+      flex: 1;
 
       .publicNav {
         height: 100%;
+        float: left;
 
         li, span {
           font-size: 13px;
@@ -172,7 +174,7 @@
       }
 
       .publicBodyMain {
-        flex: 1;
+        overflow: auto;
         height: 100%;
         background-color: #fafafa;
         box-sizing: border-box;
