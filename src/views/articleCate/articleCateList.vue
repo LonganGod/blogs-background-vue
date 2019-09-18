@@ -141,7 +141,7 @@
       },
       edit(id) {
         console.log(id)
-        location.hash = '/article/EditArticleCate'
+        location.hash = '/article/editArticleCate'
       },
       del(id) {
         this.$confirm('此操作将永久删除该类目, 是否继续?', '提示', {
@@ -162,10 +162,10 @@
         console.log(id)
       },
       showSecCate(id) {
-        location.hash = '/article/SecArticleCateList'
+        location.hash = '/article/secArticleCateList'
       },
       addCate() {
-        location.hash = '/article/AddArticleCate'
+        location.hash = '/article/addArticleCate'
       }
     }
   }

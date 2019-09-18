@@ -63,6 +63,7 @@
           },
           {
             index: '2',
+            link: '/user',
             title: '用户管理',
             icon: 'el-icon-user-solid',
             children: [
@@ -80,6 +81,7 @@
           },
           {
             index: '3',
+            link: '/article',
             title: '文章管理',
             icon: 'el-icon-document',
             children: [
@@ -111,7 +113,30 @@
             link: '/charts',
             title: '数据统计',
             icon: 'el-icon-s-data'
-          }
+          },
+          {
+            index: '6',
+            link: '/config',
+            title: '基本设置',
+            icon: 'el-icon-setting',
+            children: [
+              {
+                index: '6-1',
+                link: '/config/backgroundNavList',
+                title: '后台导航列表'
+              },
+              {
+                index: '6-2',
+                link: '/config/frontDeskNav',
+                title: '前台导航列表'
+              },
+              {
+                index: '6-3',
+                link: '/config/permissions',
+                title: '权限管理'
+              },
+            ]
+          },
         ],
         icon: require('../../uploads/userIcon/1.jpg')
       }

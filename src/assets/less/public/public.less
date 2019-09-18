@@ -16,11 +16,10 @@
 .el-menu-item:hover {
   background-color: rgb(0, 150, 136) !important;
   color: #fff !important;
-}
 
-.el-submenu__title:hover i,
-.el-menu-item:hover i {
-  color: #fff !important;
+  &:hover i {
+    color: #fff !important;
+  }
 }
 
 .el-pagination {
@@ -47,4 +46,23 @@
 
 .el-card__body {
   padding: 15px;
+}
+
+.el-button--primary {
+  background-color: #009688;
+  border-color: #009688;
+
+  &:hover {
+    background-color: #00af9d;
+    border-color: #00af9d;
+  }
+}
+
+.el-switch.is-checked .el-switch__core {
+  background-color: #009688;
+  border-color: #009688;
+}
+
+.el-select-dropdown__item.selected {
+  color: #009688;
 }

@@ -9,9 +9,9 @@
         :model="ruleForm"
         :rules="rules"
         ref="ruleForm"
-        label-width="120px"
+        label-width="140px"
         class="demo-ruleForm">
-        <el-form-item label="文章一级类别" prop="cateName">
+        <el-form-item label="文章一级类别：" prop="cateName">
           <el-input v-model="ruleForm.cateName"></el-input>
         </el-form-item>
         <el-form-item>
@@ -35,7 +35,7 @@
       return {
         linkArr: [
           {path: '', title: '文章管理'},
-          {path: '/article/ArticleCateList', title: '文章一级分类'},
+          {path: '/article/articleCateList', title: '文章一级分类'},
           {path: '', title: '编辑一级分类'}
         ],
         ruleForm: {

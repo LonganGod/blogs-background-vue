@@ -22,6 +22,9 @@ import {
   Message,
   Form,
   FormItem,
+  Switch,
+  Select,
+  Option,
   Timeline,
   TimelineItem,
 } from 'element-ui'
@@ -53,6 +56,9 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+Vue.use(Switch)
+Vue.use(Select)
+Vue.use(Option)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

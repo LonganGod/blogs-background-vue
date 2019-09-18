@@ -38,8 +38,8 @@
       return {
         linkArr: [
           {path: '', title: '文章管理'},
-          {path: '/article/ArticleCateList', title: '文章一级分类'},
-          {path: '/article/SecArticleCateList', title: '文章二级分类'},
+          {path: '/article/articleCateList', title: '文章一级分类'},
+          {path: '/article/secArticleCateList', title: '文章二级分类'},
           {path: '', title: '新增二级分类'}
         ],
         ruleForm: {

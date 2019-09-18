@@ -4,6 +4,7 @@ import Home from '../../views/home/home'
 
 import UserRouter from '../user/user'
 import ArticleRouter from '../article/article'
+import Config from '../config/config'
 
 export default [
   {
@@ -29,7 +30,8 @@ export default [
         component: Home,
       },
       ...UserRouter,
-      ...ArticleRouter
+      ...ArticleRouter,
+      ...Config,
     ]
   }
 ]

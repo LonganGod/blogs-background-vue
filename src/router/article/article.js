@@ -13,27 +13,27 @@ export default [
   },
   {
     name: 'AddArticleCate',
-    path: '/article/AddArticleCate',
+    path: '/article/addArticleCate',
     component: AddArticleCate
   },
   {
     name: 'EditArticleCate',
-    path: '/article/EditArticleCate',
+    path: '/article/editArticleCate',
     component: EditArticleCate
   },
   {
     name: 'SecArticleCateList',
-    path: '/article/SecArticleCateList',
+    path: '/article/secArticleCateList',
     component: SecArticleCateList
   },
   {
     name: 'AddSecArticleCate',
-    path: '/article/AddSecArticleCate',
+    path: '/article/addSecArticleCate',
     component: AddSecArticleCate
   },
   {
     name: 'EditSecArticleCate',
-    path: '/article/EditSecArticleCate',
+    path: '/article/editSecArticleCate',
     component: EditSecArticleCate
   },
 ]
