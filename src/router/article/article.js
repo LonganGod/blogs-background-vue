@@ -1,9 +1,12 @@
 import ArticleCateList from '../../views/articleCate/articleCateList'
 import AddArticleCate from '../../views/articleCate/addArticleCate'
 import EditArticleCate from '../../views/articleCate/editArticleCate'
+
 import SecArticleCateList from '../../views/secArticleCate/secArticleCateList'
 import AddSecArticleCate from '../../views/secArticleCate/addSecArticleCate'
 import EditSecArticleCate from '../../views/secArticleCate/editSecArticleCate'
+
+import ArticleList from '../../views/articleList/articleList'
 
 export default [
   {
@@ -35,5 +38,10 @@ export default [
     name: 'EditSecArticleCate',
     path: '/article/editSecArticleCate',
     component: EditSecArticleCate
+  },
+  {
+    name: 'ArticleList',
+    path: '/article/articleList',
+    component: ArticleList
   },
 ]

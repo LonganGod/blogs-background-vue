@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="box-card main-card">
-      <el-row :gutter="15">
+      <el-row :gutter="15" class="searchBox">
         <el-col :span="4">
           <el-input
             placeholder="请输入导航名称"
@@ -14,15 +14,12 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" class="searchBtn">查询</el-button>
+          <el-button type="primary" class="searchBtn" size="medium">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="addBtn" @click="addNav">新增导航</el-button>
+          <el-button type="primary" class="addBtn" @click="addNav" size="medium">新增导航</el-button>
         </el-col>
       </el-row>
-    </el-card>
-
-    <el-card class="box-card main-card">
       <el-table
         :data="tableData"
         row-key="id"
@@ -35,13 +32,11 @@
         </el-table-column>
         <el-table-column
           prop="navName"
-          label="标题"
-          sortable>
+          label="标题">
         </el-table-column>
         <el-table-column
           prop="navIcon"
-          label="图标"
-          sortable>
+          label="图标">
         </el-table-column>
         <el-table-column
           prop="navUrl"
@@ -49,7 +44,8 @@
         </el-table-column>
         <el-table-column
           prop="position"
-          label="位置">
+          label="位置"
+          sortable>
         </el-table-column>
         <el-table-column
           label="操作"

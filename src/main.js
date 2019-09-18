@@ -25,6 +25,7 @@ import {
   Switch,
   Select,
   Option,
+  Cascader,
   Timeline,
   TimelineItem,
 } from 'element-ui'
@@ -59,6 +60,7 @@ Vue.use(TimelineItem)
 Vue.use(Switch)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Cascader)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

@@ -5,7 +5,7 @@
     </el-card>
 
     <el-card class="box-card main-card">
-      <el-row :gutter="15">
+      <el-row :gutter="15" class="searchBox">
         <el-col :span="4">
           <el-input
             placeholder="请输入类别名称"
@@ -14,15 +14,12 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" class="searchBtn">查询</el-button>
+          <el-button type="primary" class="searchBtn" size="medium">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="addBtn" @click="addCate">新建一级分类</el-button>
+          <el-button type="primary" class="addBtn" @click="addCate" size="medium">新建一级分类</el-button>
         </el-col>
       </el-row>
-    </el-card>
-
-    <el-card class="box-card main-card">
       <el-table
         :data="tdObjArr"
         border
