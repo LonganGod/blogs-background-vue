@@ -7,6 +7,7 @@ import AddSecArticleCate from '../../views/secArticleCate/addSecArticleCate'
 import EditSecArticleCate from '../../views/secArticleCate/editSecArticleCate'
 
 import ArticleList from '../../views/articleList/articleList'
+import ReleaseArticle from '../../views/articleList/releaseArticle'
 
 export default [
   {
@@ -43,5 +44,10 @@ export default [
     name: 'ArticleList',
     path: '/article/articleList',
     component: ArticleList
+  },
+  {
+    name: 'ReleaseArticle',
+    path: '/article/releaseArticle',
+    component: ReleaseArticle
   },
 ]

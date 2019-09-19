@@ -28,6 +28,7 @@ import {
   Cascader,
   Timeline,
   TimelineItem,
+  Upload,
 } from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css';
@@ -61,6 +62,7 @@ Vue.use(Switch)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Cascader)
+Vue.use(Upload)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

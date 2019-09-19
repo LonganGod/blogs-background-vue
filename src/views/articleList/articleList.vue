@@ -16,7 +16,7 @@
         <el-col :span="4">
           <el-cascader
             v-model="cate"
-            :options="options"
+            :options="cateList"
             clearable
             :show-all-levels="false"
             placeholder="请选择文章分类">
@@ -91,26 +91,17 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              type="primary"
+              @click="details(scope.row.id)"
+              plain>
+              查看
+            </el-button>
+            <el-button
+              size="mini"
               type="success"
               @click="edit(scope.row.id)"
               plain>
               编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="warning"
-              @click="release(scope.row.id)"
-              plain
-              v-if="scope.row.state == 2">
-              发布
-            </el-button>
-            <el-button
-              size="mini"
-              type="warning"
-              plain
-              disabled
-              v-if="scope.row.state == 1">
-              发布
             </el-button>
             <el-button
               size="mini"
@@ -149,7 +140,7 @@
           {path: '', title: '文章管理'},
           {path: '', title: '文章列表'}
         ],
-        options: [
+        cateList: [
           {
             value: 'zhinan',
             label: '指南',
@@ -304,22 +295,7 @@
         console.log(id)
         // location.hash = '/config/editBackgroundNav'
       },
-      release(id) {
-        this.$confirm('此操作将发布该篇文章, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
+      details(id) {
         console.log(id)
       },
       del(id) {
