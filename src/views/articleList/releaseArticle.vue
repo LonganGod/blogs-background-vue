@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item label="标签：" required>
           <el-tag
-            :key="tag"
+            :key="tag.tagId"
             v-for="tag in ruleForm.tags"
             closable
             :disable-transitions="false"
@@ -38,7 +38,7 @@
             class="input-new-tag"
             size="small"
             @change="addTagSave">
-            <el-option v-for="tag in allTags" :label="tag.tagName" :value="tag.tagId"></el-option>
+            <el-option v-for="tag in allTags" :label="tag.tagName" :value="tag.tagId" :key="tag.tagId"></el-option>
           </el-select>
           <el-button
             v-else
@@ -61,6 +61,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="正文：" prop="type">
+          <Editor v-model="ruleForm.article"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
@@ -74,11 +75,13 @@
 
 <script>
   import WSBreadcrumb from '../../component/breadcrumb/breadcrumb'
+  import Editor from '../../component/editor/editor'
 
   export default {
     name: "releaseArticle",
     components: {
       'WSBreadcrumb': WSBreadcrumb,
+      'Editor': Editor,
     },
     data() {
       return {
@@ -210,6 +213,8 @@
         this.$refs[formName].resetFields();
       },
       tagClose(tag) {
+        let obj = this.ruleForm.tags[this.ruleForm.tags.indexOf(tag)]
+        this.allTags.push(obj);
         this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
       },
       addTag() {
@@ -222,6 +227,8 @@
         });
         if (obj) {
           this.ruleForm.tags.push(obj);
+          let index = this.allTags.indexOf(obj)
+          this.allTags.splice(index, 1);
         }
         this.inputVisible = false;
         this.inputValue = '';
@@ -235,11 +242,11 @@
 
 <style scoped>
   .el-form {
-    width: 800px;
+    width: 1200px;
   }
 
   .el-cascader, .el-input {
-    width: 700px;
+    width: 1100px;
   }
 
   .el-tag {
