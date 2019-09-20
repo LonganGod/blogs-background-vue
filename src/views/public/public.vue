@@ -116,22 +116,30 @@
           },
           {
             index: '6',
+            link: '/frontDesk',
+            title: '前台页面配置',
+            icon: 'el-icon-s-help',
+            children: [
+              {
+                index: '6-1',
+                link: '/frontDesk/frontDeskNav',
+                title: '前台导航列表'
+              },
+            ]
+          },
+          {
+            index: '7',
             link: '/config',
             title: '基本设置',
             icon: 'el-icon-setting',
             children: [
               {
-                index: '6-1',
+                index: '7-1',
                 link: '/config/backgroundNavList',
                 title: '后台导航列表'
               },
               {
-                index: '6-2',
-                link: '/config/frontDeskNav',
-                title: '前台导航列表'
-              },
-              {
-                index: '6-3',
+                index: '7-3',
                 link: '/config/permissions',
                 title: '权限管理'
               },
