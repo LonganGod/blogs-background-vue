@@ -8,6 +8,7 @@ import EditSecArticleCate from '../../views/secArticleCate/editSecArticleCate'
 
 import ArticleList from '../../views/articleList/articleList'
 import ReleaseArticle from '../../views/articleList/releaseArticle'
+import EditArticle from '../../views/articleList/editArticle'
 
 export default [
   {
@@ -49,5 +50,10 @@ export default [
     name: 'ReleaseArticle',
     path: '/article/releaseArticle',
     component: ReleaseArticle
+  },
+  {
+    name: 'EditArticle',
+    path: '/article/editArticle',
+    component: EditArticle
   },
 ]

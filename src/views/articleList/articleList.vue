@@ -86,16 +86,9 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="250"
+          width="180"
           align="center">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="details(scope.row.id)"
-              plain>
-              查看
-            </el-button>
             <el-button
               size="mini"
               type="success"
@@ -293,7 +286,7 @@
       },
       edit(id) {
         console.log(id)
-        // location.hash = '/config/editBackgroundNav'
+        location.hash = '/article/editArticle'
       },
       details(id) {
         console.log(id)

@@ -1,5 +1,5 @@
 <template>
-  <div class="releaseArticleBox">
+  <div class="editArticleBox">
     <el-card class="box-card">
       <WSBreadcrumb :linkArr="linkArr"></WSBreadcrumb>
     </el-card>
@@ -66,7 +66,7 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
           <el-button type="danger" @click="saveForm('ruleForm')">保存</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button @click="goBack('ruleForm')">返回</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -78,7 +78,7 @@
   import Editor from '../../component/editor/editor'
 
   export default {
-    name: "releaseArticle",
+    name: "editArticleBox",
     components: {
       'WSBreadcrumb': WSBreadcrumb,
       'Editor': Editor,
@@ -87,12 +87,17 @@
       return {
         linkArr: [
           {path: '', title: '文章管理'},
-          {path: '', title: '发布文章'},
+          {path: '/article/articleList', title: '文章列表'},
+          {path: '', title: '编辑'},
         ],
         ruleForm: {
-          articleName: '',
-          cate: '',
-          tags: [],
+          articleName: '文章标题啊啊',
+          cate: 'shejiyuanze',
+          tags: [
+            {tagId: 1, tagName: 'JavaScript'},
+            {tagId: 2, tagName: 'HTML'},
+            {tagId: 3, tagName: 'Vue'},
+          ],
           imgs: [],
           article: ''
         },
@@ -210,8 +215,8 @@
       },
       saveForm(formName) {
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      goBack() {
+        history.go(-1)
       },
       tagClose(tag) {
         let obj = this.ruleForm.tags[this.ruleForm.tags.indexOf(tag)]
