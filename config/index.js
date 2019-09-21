@@ -10,7 +10,18 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    //配置跨域请求,注意配置完之后需要重启编译该项目
+    proxyTable: {
+      //请求名字变量可以自己定义
+      '/apis': {
+        target: 'http://127.0.0.1:6666', // 请求的接口域名或IP地址，开头是http或https
+        // secure: false,  // 如果是https接口，需要配置这个参数
+        changeOrigin: true, // 是否跨域，如果接口跨域，需要进行这个参数配置
+        pathRewrite: {
+          '^/apis': ''//表示需要rewrite重写路径
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -20,7 +31,7 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+
     /**
      * Source Maps
      */

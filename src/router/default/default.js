@@ -5,6 +5,7 @@ import Home from '../../views/home/home'
 import UserRouter from '../user/user'
 import ArticleRouter from '../article/article'
 import Config from '../config/config'
+import Labels from '../labels/labels'
 
 export default [
   {
@@ -32,6 +33,7 @@ export default [
       ...UserRouter,
       ...ArticleRouter,
       ...Config,
+      ...Labels,
     ]
   }
 ]

@@ -124,6 +124,11 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.$axios.get('/apis/user/getUserData').then((result) => {
+        console.log(result)
+      })
+    },
     data() {
       return {
         linkArr: [
