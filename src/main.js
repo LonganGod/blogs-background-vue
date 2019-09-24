@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios';
+import moment from 'moment'
 import {
   Input,
   Button,
@@ -72,7 +73,11 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$message = Message;
 Vue.prototype.$axios = axios;
 
-axios.defaults.baseURL = '/apis';
+Vue.filter('dateFormat', date => {
+  return moment(date).format('YYYY-MM-DD')
+})
+
+// axios.defaults.baseURL = '/api';
 
 /* eslint-disable no-new */
 new Vue({

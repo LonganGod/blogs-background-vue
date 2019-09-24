@@ -13,11 +13,6 @@
         @selection-change="handleSelectionChange"
         style="width: 100%">
         <el-table-column
-          type="selection"
-          width="50"
-          align="center">
-        </el-table-column>
-        <el-table-column
           sortable
           prop="index"
           label="序号"
@@ -80,6 +75,9 @@
           prop="createTime"
           label="创建时间"
           sortable>
+          <template slot-scope="scope">
+            {{scope.row.createTime | dateFormat}}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -110,7 +108,7 @@
         :page-sizes="[5, 10, 20]"
         :page-size="10"
         layout="total, prev, pager, next, sizes"
-        :total="400">
+        :total="totalList">
       </el-pagination>
     </el-card>
   </div>
@@ -125,9 +123,8 @@
       'WSBreadcrumb': WSBreadcrumb
     },
     created() {
-      this.$axios.get('/apis/user/getUserData').then((result) => {
-        console.log(result)
-      })
+      this.getData();
+      this.getTotal();
     },
     data() {
       return {
@@ -135,54 +132,41 @@
           {path: '', title: '用户管理'},
           {path: '', title: '用户列表'}
         ],
-        tdObjArr: [
-          {
-            id: 1,
-            index: 1,
-            icon: require('../../uploads/userIcon/2.jpg'),
-            userName: 'ws123456',
-            nickName: '桂圆上火',
-            email: 'ws15531085321@163.com',
-            userType: 2,
-            createTime: '2019-08-12'
-          }, {
-            id: 2,
-            index: 2,
-            icon: '',
-            userName: '游客K_22323123',
-            nickName: '游客K_22323123',
-            email: '',
-            userType: 3,
-            createTime: '2019-08-12'
-          }, {
-            id: 3,
-            index: 3,
-            icon: require('../../uploads/userIcon/1.jpg'),
-            userName: 'admin',
-            nickName: '超管',
-            email: 'wangshuo@hengtn.com',
-            userType: 1,
-            createTime: '2019-08-11',
-            hasChildren: true
-          }, {
-            id: 4,
-            index: 4,
-            icon: '',
-            userName: '游客K_34534532',
-            nickName: '游客K_34534532',
-            email: '',
-            userType: 3,
-            createTime: '2019-08-15'
-          }],
+        tdObjArr: [],
         userTypeFilters: [
           {text: '管理员', value: '管理员'},
           {text: '注册用户', value: '注册用户'},
           {text: '游客', value: '游客'}
         ],
-        currentPage: 1
+        currentPage: 1,
+        totalList: 0,
       }
     },
     methods: {
+      async getData() {
+        var {data} = await this.$axios.get('/api/userList/getUserData', {a: 1});
+        if (data.code == 200) {
+          this.tdObjArr = [];
+          for (let i = 0; i < data.result.length; i++) {
+            var item = data.result[i];
+            var obj = {};
+            obj.id = item.userId;
+            obj.index = i + 1;
+            obj.icon = item.userIcon == null ? '' : item.userIcon;
+            obj.userName = item.userName;
+            obj.nickName = item.nickName;
+            obj.email = item.userEmail;
+            obj.userType = item.userType;
+            obj.createTime = item.createTime;
+            this.tdObjArr.push(obj)
+          }
+        }
+      },
+      getTotal() {
+        this.$axios.get('/api/userList/totalList').then(({data}) => {
+          this.totalList = data.result.length
+        })
+      },
       handleSelectionChange(val) {
         console.log(val)
       },
