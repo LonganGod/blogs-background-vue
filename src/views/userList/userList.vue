@@ -10,7 +10,6 @@
         border
         stripe
         row-key="id"
-        @selection-change="handleSelectionChange"
         style="width: 100%">
         <el-table-column
           sortable
@@ -26,7 +25,7 @@
           align="center">
           <template slot-scope="scope">
             <el-avatar size="large" :src="scope.row.icon" v-if="scope.row.icon != ''"></el-avatar>
-            <el-avatar size="large" :src="scope.row.icon" v-else>游</el-avatar>
+            <el-avatar size="large" v-else>游</el-avatar>
           </template>
         </el-table-column>
         <el-table-column
@@ -106,7 +105,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20]"
-        :page-size="10"
+        :page-size="pageList"
         layout="total, prev, pager, next, sizes"
         :total="totalList">
       </el-pagination>
@@ -140,11 +139,18 @@
         ],
         currentPage: 1,
         totalList: 0,
+        startId: 0,
+        pageList: 5,
       }
     },
     methods: {
       async getData() {
-        var {data} = await this.$axios.get('/api/userList/getUserData', {a: 1});
+        var {data} = await this.$axios.get('/api/userList/getUserData', {
+          params: {
+            startId: this.startId,
+            pageList: this.pageList
+          }
+        });
         if (data.code == 200) {
           this.tdObjArr = [];
           for (let i = 0; i < data.result.length; i++) {
@@ -163,12 +169,9 @@
         }
       },
       getTotal() {
-        this.$axios.get('/api/userList/totalList').then(({data}) => {
+        this.$axios.get('/api/userList/getUserTotalList').then(({data}) => {
           this.totalList = data.result.length
         })
-      },
-      handleSelectionChange(val) {
-        console.log(val)
       },
       filterUserType(value, row) {
         let userType = 0
@@ -186,13 +189,27 @@
         return row.userType === userType;
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageList = val
+        this.getData()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        console.log(val)
+        if (val <= 1) {
+          this.startId = 0
+          this.getData()
+        } else {
+          this.$axios.get('/api/userList/getLastDataId', {
+            params: {
+              prevListNum: this.pageList * (val - 1)
+            }
+          }).then(({data}) => {
+            this.startId = data.result
+            this.getData()
+          })
+        }
       },
       details(userId) {
-        location.hash = '/user/userDetails'
+        location.hash = `/user/userDetails?userId=${userId}`
       },
       del(userId) {
         this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
@@ -200,17 +217,24 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          this.$axios.get('/api/userList/deleteUser', {
+            params: {
+              userId: userId
+            }
+          }).then(({data}) => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getData()
+            this.getTotal()
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
-        console.log(userId)
       }
     }
   }

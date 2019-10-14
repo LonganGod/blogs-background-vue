@@ -77,6 +77,10 @@ Vue.filter('dateFormat', date => {
   return moment(date).format('YYYY-MM-DD')
 })
 
+Vue.filter('dateFormatSeconds', date => {
+  return moment(date).format('YYYY-MM-DD HH:mm:ss')
+})
+
 // axios.defaults.baseURL = '/api';
 
 /* eslint-disable no-new */

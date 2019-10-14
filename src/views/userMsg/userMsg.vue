@@ -18,12 +18,12 @@
               <el-timeline-item
                 v-for="(activity) in props.row.reply"
                 :key="activity.id"
-                :timestamp="activity.createTime">
+                :timestamp="activity.createTime | dateFormatSeconds">
                 <span class="nickName">{{activity.nickName}}</span>
                 <span>回复</span>
-                <span class="nickName">{{activity.respondTo}}</span>
+                <span class="nickName">{{activity.respondTo1}}</span>
                 <span>:</span>
-                <span>{{activity.desc}}</span>
+                <span>{{activity.msgDetail}}</span>
               </el-timeline-item>
             </el-timeline>
             <div align="center" v-else>暂无回复</div>
@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column
           label="评论内容"
-          prop="desc">
+          prop="msgDetail">
         </el-table-column>
         <el-table-column
           label="评论文章"
@@ -55,6 +55,9 @@
           prop="createTime"
           width="200"
           sortable>
+          <template slot-scope="scope">
+            {{scope.row.createTime | dateFormat}}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -77,9 +80,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20]"
-        :page-size="10"
+        :page-size="pageList"
         layout="total, prev, pager, next, sizes"
-        :total="400">
+        :total="totalList">
       </el-pagination>
     </el-card>
   </div>
@@ -93,102 +96,77 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
           {path: '', title: '用户管理'},
           {path: '', title: '用户留言'}
         ],
-        tableData: [
-          {
-            id: 1,
-            index: '1',
-            nickName: '鸡蛋仔',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            article: '相关文章',
-            createTime: '2019-09-17',
-            reply: [
-              {
-                id: 30,
-                index: '1',
-                nickName: 'admin',
-                respondTo: '鸡蛋仔',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                createTime: '2019-09-17',
-              },
-              {
-                id: 31,
-                index: '2',
-                nickName: '鸡蛋仔',
-                respondTo: 'admin',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                createTime: '2019-09-17',
-              },
-              {
-                id: 32,
-                index: '3',
-                nickName: 'admin',
-                respondTo: '鸡蛋仔',
-                desc: '荷兰优质淡奶，奶香浓而不腻',
-                createTime: '2019-09-17',
-              }
-            ]
-          },
-          {
-            id: 2,
-            index: '2',
-            nickName: '好滋好味',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            article: '相关文章',
-            createTime: '2019-09-15',
-            reply: []
-          },
-          {
-            id: 3,
-            index: '3',
-            nickName: '桂圆上火',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            article: '相关文章',
-            createTime: '2019-09-14',
-            reply: []
-          },
-          {
-            id: 5,
-            index: '4',
-            nickName: '好吃不过饺子',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            article: '相关文章',
-            createTime: '2019-09-11',
-            reply: []
-          }
-        ],
-        currentPage: 1
+        tableData: [],
+        currentPage: 1,
+        pageList: 5,
+        totalList: 0
       }
     },
     methods: {
+      async getData() {
+        var {data} = await this.$axios.get('/api/userMsg/getLeaveMsgData', {
+          params: {
+            currentPage: this.currentPage,
+            pageList: this.pageList
+          }
+        });
+        if (data.code == 200) {
+          this.tableData = [];
+          this.totalList = data.totalPage;
+          for (let i = 0; i < data.result.length; i++) {
+            var item = data.result[i];
+            var obj = {};
+            obj.id = item.msgId;
+            obj.index = i + 1;
+            obj.nickName = item.nickName;
+            obj.msgDetail = item.msgDetail;
+            obj.article = '相关文章';
+            obj.createTime = item.createTime;
+            obj.reply = item.reply;
+            this.tableData.push(obj)
+          }
+        }
+      },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageList = val
+        this.getData()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.getData()
       },
-      del(id) {
+      del(msgId) {
         this.$confirm('此操作将永久删除该条评论, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          this.$axios.get('/api/userMsg/deleteMsg', {
+            params: {
+              msgId: msgId
+            }
+          }).then(({data}) => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getData()
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
-        console.log(id)
       },
     }
   }

@@ -7,28 +7,31 @@
       <el-row>
         <el-col :span="2">用户头像</el-col>
         <el-col :span="22">
-          <el-avatar size="large" :src="circleUrl"></el-avatar>
+          <el-avatar size="large" :src="userDetails.userIcon" v-if="userDetails.userIcon != ''"></el-avatar>
+          <el-avatar size="large" v-else>游</el-avatar>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="2">用户名</el-col>
-        <el-col :span="22">ws123456</el-col>
+        <el-col :span="22">{{userDetails.userName}}</el-col>
       </el-row>
       <el-row>
         <el-col :span="2">昵称</el-col>
-        <el-col :span="22">啊啊啊啊啊</el-col>
+        <el-col :span="22">{{userDetails.nickName}}</el-col>
       </el-row>
       <el-row>
         <el-col :span="2">邮箱</el-col>
-        <el-col :span="22">ws15531085321@163.com</el-col>
+        <el-col :span="22">{{userDetails.userEmail}}</el-col>
       </el-row>
       <el-row>
         <el-col :span="2">用户类型</el-col>
-        <el-col :span="22">注册用户</el-col>
+        <el-col :span="22" v-if="userDetails.userType == 1">管理员</el-col>
+        <el-col :span="22" v-else-if="userDetails.userType == 2">注册用户</el-col>
+        <el-col :span="22" v-else>游客</el-col>
       </el-row>
       <el-row>
         <el-col :span="2">创建时间</el-col>
-        <el-col :span="22">2019-04-15</el-col>
+        <el-col :span="22">{{userDetails.createTime | dateFormat}}</el-col>
       </el-row>
     </el-card>
   </div>
@@ -42,6 +45,9 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getDate()
+    },
     data() {
       return {
         linkArr: [
@@ -49,9 +55,23 @@
           {path: '/user/userList', title: '用户列表'},
           {path: '', title: '查看'}
         ],
-        circleUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+        userDetails: {}
       }
     },
+    methods: {
+      async getDate() {
+        let userId = location.href.split('?')[1].split('=')[1]
+        let {data} = await this.$axios.get('/api/userList/showUserDetail', {
+          params: {
+            userId: userId
+          }
+        })
+        if (data.code == 200) {
+          this.userDetails = data.result
+        }
+        console.log(data)
+      }
+    }
   }
 </script>
 
