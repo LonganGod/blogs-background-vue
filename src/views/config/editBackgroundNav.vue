@@ -11,13 +11,18 @@
         ref="ruleForm"
         label-width="150px"
         class="demo-ruleForm">
+        <el-form-item class="hidden" prop="navId">
+          <el-input v-model="ruleForm.navId"></el-input>
+        </el-form-item>
         <el-form-item label="导航名称：" prop="navName">
           <el-input v-model="ruleForm.navName"></el-input>
         </el-form-item>
         <el-form-item label="父级导航：" prop="parentNavName">
           <el-select v-model="ruleForm.parentNavName" placeholder="请选择父级导航">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option label="无" value="0"></el-option>
+            <template v-for="item in firNavList">
+              <el-option :label="item.navName" :value="item.navId" :key="item.navId"></el-option>
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="图标：" prop="navIcon">
@@ -29,11 +34,11 @@
         <el-form-item label="位置：" prop="navPosition">
           <el-input type="number" autocomplete="off" class="navPosition" v-model="ruleForm.navPosition"></el-input>
         </el-form-item>
-        <el-form-item label="即时配送：" prop="navState">
+        <el-form-item label="是否启用：" prop="navState">
           <el-switch v-model="ruleForm.navState"></el-switch>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确认编辑</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -49,6 +54,12 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getFirNavData()
+      this.ruleForm.navId = location.hash.split('?')[1].split('=')[1]
+      this.getData()
+      console.log(this.ruleForm)
+    },
     data() {
       return {
         linkArr: [
@@ -57,8 +68,9 @@
           {path: '', title: '编辑后台导航'}
         ],
         ruleForm: {
+          navId: '',
           navName: '',
-          parentNavName: 'shanghai',
+          parentNavName: '0',
           navIcon: '',
           navUrl: '',
           navPosition: '',
@@ -71,22 +83,43 @@
           ],
           navUrl: [
             {required: true, message: '请输入跳转路径', trigger: 'blur'},
-            {required: true, message: '请输入跳转路径', trigger: 'blur'},
           ],
           navPosition: [
             {required: true, message: '请输入位置', trigger: 'blur'}
           ]
-        }
+        },
+        firNavList: []
       }
     },
     methods: {
+      async getFirNavData() {
+        let {data} = await this.$axios.get('/api/backend/getFirBackendNavList')
+        if (data.code == 200) {
+          this.firNavList = data.result
+        }
+      },
+      async getData() {
+        let {data} = await this.$axios.get('/api/backend/getBackendNav', {params: {navId: this.ruleForm.navId}})
+        if (data.code == 200) {
+          this.ruleForm.navName = data.result.navName
+          this.ruleForm.parentNavName = data.result.navPId
+          this.ruleForm.navIcon = data.result.navIcon
+          this.ruleForm.navUrl = data.result.navJumpPage
+          this.ruleForm.navPosition = data.result.navIndex
+          this.ruleForm.navState = data.result.navStatus == 1 ? true : false
+        }
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/backend/editBackendNav', this.ruleForm)
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '编辑成功'
+              })
+              this.$router.push('/config/backgroundNavList')
+            }
           }
         });
       },
@@ -104,5 +137,9 @@
 
   .el-input, .el-select {
     width: 500px;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>

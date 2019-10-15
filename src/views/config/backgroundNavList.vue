@@ -22,13 +22,14 @@
       </el-row>
       <el-table
         :data="tableData"
-        row-key="id"
+        row-key="navId"
         border
         :tree-props="{children: 'children'}">
         <el-table-column
-          prop="createDate"
+          prop="createTime"
           label="创建日期"
           sortable>
+          <template slot-scope="scope">{{scope.row.createTime | dateFormat}}</template>
         </el-table-column>
         <el-table-column
           prop="navName"
@@ -39,11 +40,11 @@
           label="图标">
         </el-table-column>
         <el-table-column
-          prop="navUrl"
+          prop="navJumpPage"
           label="跳转地址">
         </el-table-column>
         <el-table-column
-          prop="position"
+          prop="navIndex"
           label="位置"
           sortable>
         </el-table-column>
@@ -55,31 +56,31 @@
             <el-button
               size="mini"
               type="success"
-              @click="edit(scope.row.id)"
+              @click="edit(scope.row.navId)"
               plain>
               编辑
             </el-button>
             <el-button
               size="mini"
               type="warning"
-              @click="disable(scope.row.id)"
+              @click="disable(scope.row.navId)"
               plain
-              v-if="scope.row.state == 1">
+              v-if="scope.row.navStatus == 1">
               停用
             </el-button>
             <el-button
               size="mini"
               type="info"
-              @click="enable(scope.row.id)"
+              @click="enable(scope.row.navId)"
               plain
-              v-if="scope.row.state == 2">
+              v-if="scope.row.navStatus == 2">
               启用
             </el-button>
             <el-button
               size="mini"
               type="danger"
               plain
-              @click="del(scope.row.id)">
+              @click="del(scope.row.navId)">
               删除
             </el-button>
           </template>
@@ -90,9 +91,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20]"
-        :page-size="10"
+        :page-size="pageList"
         layout="total, prev, pager, next, sizes"
-        :total="400">
+        :total="totalList">
       </el-pagination>
     </el-card>
   </div>
@@ -106,197 +107,84 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
           {path: '', title: '基本设置'},
           {path: '', title: '后台导航列表'}
         ],
-        tableData: [
-          {
-            id: 1,
-            createDate: '2016-05-02',
-            navName: '首页',
-            navIcon: 'el-icon-s-home',
-            navUrl: '/home',
-            state: '1',
-            position: '1'
-          },
-          {
-            id: 2,
-            createDate: '2016-05-02',
-            navName: '用户管理',
-            navIcon: 'el-icon-user-solid',
-            navUrl: '/user',
-            state: '1',
-            position: '2',
-            children: [
-              {
-                id: 21,
-                createDate: '2016-05-02',
-                navName: '用户列表',
-                navIcon: '',
-                navUrl: '/user/userList',
-                state: '1',
-                position: '1'
-              },
-              {
-                id: 22,
-                createDate: '2016-05-02',
-                navName: '用户留言',
-                navIcon: '',
-                navUrl: '/user/userMsg',
-                state: '1',
-                position: '2'
-              }
-            ]
-          },
-          {
-            id: 3,
-            createDate: '2016-05-04',
-            navName: '文章管理',
-            navIcon: 'el-icon-document',
-            navUrl: '/article',
-            state: '1',
-            position: '3',
-            children: [
-              {
-                id: 31,
-                createDate: '2016-05-02',
-                navName: '文章分类',
-                navIcon: '',
-                navUrl: '/article/articleCateList',
-                state: '1',
-                position: '1'
-              },
-              {
-                id: 32,
-                createDate: '2016-05-02',
-                navName: '文章列表',
-                navIcon: '',
-                navUrl: '/article/articleList',
-                state: '2',
-                position: '2'
-              },
-              {
-                id: 33,
-                createDate: '2016-05-02',
-                navName: '发布文章',
-                navIcon: '',
-                navUrl: '/article/releaseArticle',
-                state: '2',
-                position: '3'
-              }
-            ]
-          },
-          {
-            id: 4,
-            createDate: '2016-05-01',
-            navName: '标签管理',
-            navIcon: 'el-icon-collection-tag',
-            navUrl: '/labels',
-            state: '1',
-            position: '4'
-          },
-          {
-            id: 5,
-            createDate: '2016-05-03',
-            navName: '数据统计',
-            navIcon: 'el-icon-s-data',
-            navUrl: '/charts',
-            state: '2',
-            position: '5'
-          },
-          {
-            id: 6,
-            createDate: '2016-05-03',
-            navName: '基本设置',
-            navIcon: 'el-icon-setting',
-            navUrl: '/config',
-            state: '1',
-            position: '6',
-            children: [
-              {
-                id: 61,
-                createDate: '2016-05-02',
-                navName: '后台导航列表',
-                navIcon: '',
-                navUrl: '/config/backgroundNavList',
-                state: '1',
-                position: '1'
-              },
-              {
-                id: 62,
-                createDate: '2016-05-02',
-                navName: '前台导航列表',
-                navIcon: '',
-                navUrl: '/config/frontDeskNav',
-                state: '1',
-                position: '2'
-              },
-              {
-                id: 63,
-                createDate: '2016-05-02',
-                navName: '权限管理',
-                navIcon: '',
-                navUrl: '/config/permissions',
-                state: '1',
-                position: '3'
-              }
-            ]
-          }
-        ],
+        tableData: [],
+        pageList: 10,
         currentPage: 1,
+        totalList: 0,
         cateName: ''
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/backend/getBackendNavList', {
+          params: {
+            currentPage: this.currentPage,
+            pageList: this.pageList
+          }
+        })
+        if (data.code == 200) {
+          this.tableData = data.result
+          this.totalList = data.totalPage
+        }
+      },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageList = val
+        this.getData()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.getData()
       },
+
       addNav() {
-        location.hash = '/config/addBackgroundNav'
+        this.$router.push('/config/addBackgroundNav')
       },
       edit(id) {
-        console.log(id)
-        location.hash = '/config/editBackgroundNav'
+        this.$router.push('/config/editBackgroundNav?navId=' + id)
       },
       disable(id) {
         this.$confirm('此操作将停用该条导航, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+        }).then(async () => {
+          let {data} = await this.$axios.get('/api/backend/disableBackendNav', {params: {navId: id}})
+          if (data.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '停用成功'
+            })
+            this.getData()
+          }
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          return false
         });
-        console.log(id)
       },
       enable(id) {
         this.$confirm('此操作将启用该条导航, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+        }).then(async () => {
+          let {data} = await this.$axios.get('/api/backend/enableBackendNav', {params: {navId: id}})
+          if (data.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '启用成功'
+            })
+            this.getData()
+          }
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          return false
         });
         console.log(id)
       },
@@ -305,18 +193,18 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+        }).then(async () => {
+          let {data} = await this.$axios.get('/api/backend/deleteBackendNav', {params: {navId: id}})
+          if (data.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            this.getData()
+          }
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          return false
         });
-        console.log(id)
       },
     }
   }

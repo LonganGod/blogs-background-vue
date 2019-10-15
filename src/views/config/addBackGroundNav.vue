@@ -16,8 +16,10 @@
         </el-form-item>
         <el-form-item label="父级导航：" prop="parentNavName">
           <el-select v-model="ruleForm.parentNavName" placeholder="请选择父级导航">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option label="无" value="0"></el-option>
+            <template v-for="item in firNavList">
+              <el-option :label="item.navName" :value="item.navId" :key="item.navId"></el-option>
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="图标：" prop="navIcon">
@@ -29,7 +31,7 @@
         <el-form-item label="位置：" prop="navPosition">
           <el-input type="number" autocomplete="off" class="navPosition" v-model="ruleForm.navPosition"></el-input>
         </el-form-item>
-        <el-form-item label="即时配送：" prop="navState">
+        <el-form-item label="是否启用：" prop="navState">
           <el-switch v-model="ruleForm.navState"></el-switch>
         </el-form-item>
         <el-form-item>
@@ -49,6 +51,9 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
@@ -58,7 +63,7 @@
         ],
         ruleForm: {
           navName: '',
-          parentNavName: 'shanghai',
+          parentNavName: '0',
           navIcon: '',
           navUrl: '',
           navPosition: '',
@@ -71,22 +76,32 @@
           ],
           navUrl: [
             {required: true, message: '请输入跳转路径', trigger: 'blur'},
-            {required: true, message: '请输入跳转路径', trigger: 'blur'},
           ],
           navPosition: [
             {required: true, message: '请输入位置', trigger: 'blur'}
           ]
-        }
+        },
+        firNavList: []
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/backend/getFirBackendNavList')
+        if (data.code == 200) {
+          this.firNavList = data.result
+        }
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/backend/addBackendNav', this.ruleForm)
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '添加成功'
+              })
+              this.$router.push('/config/backgroundNavList')
+            }
           }
         });
       },
