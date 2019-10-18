@@ -19,23 +19,23 @@
         unique-opened
       >
         <template v-for="item in navList">
-          <el-submenu v-if="item.children" :index="item.index" :key="item.index">
+          <el-submenu v-if="item.children.length != 0" :index="String(item.navIndex)" :key="item.navIndex">
             <template slot="title">
-              <i :class="item.icon"></i>
-              <span>{{item.title}}</span>
+              <i :class="item.navIcon"></i>
+              <span>{{item.navName}}</span>
             </template>
 
             <template v-for="child in item.children">
-              <router-link :to="child.link">
-                <el-menu-item :index="child.index">{{child.title}}</el-menu-item>
+              <router-link :to="child.navJumpPage">
+                <el-menu-item :index="String(child.navIndex)">{{child.navName}}</el-menu-item>
               </router-link>
             </template>
           </el-submenu>
 
-          <el-menu-item v-else :key="item.index" :index="item.index">
-            <router-link :to="item.link" tag="p">
-              <i :class="item.icon"></i>
-              <span>{{item.title}}</span>
+          <el-menu-item v-else :key="item.navIndex" :index="String(item.navIndex)">
+            <router-link :to="item.navJumpPage" tag="p">
+              <i :class="item.navIcon"></i>
+              <span>{{item.navName}}</span>
             </router-link>
           </el-menu-item>
         </template>
@@ -50,102 +50,14 @@
 <script>
   export default {
     name: "public",
+    created() {
+      this.getNavData()
+    },
     data() {
       return {
         iconClass: 'el-icon-menu',
         isCollapse: false,  // 导航收起
-        navList: [
-          {
-            index: '1',
-            link: '/home',
-            title: '首页',
-            icon: 'el-icon-s-home'
-          },
-          {
-            index: '2',
-            link: '/user',
-            title: '用户管理',
-            icon: 'el-icon-user-solid',
-            children: [
-              {
-                index: '2-1',
-                link: '/user/userList',
-                title: '用户列表'
-              },
-              {
-                index: '2-2',
-                link: '/user/userMsg',
-                title: '用户留言'
-              },
-            ]
-          },
-          {
-            index: '3',
-            link: '/article',
-            title: '文章管理',
-            icon: 'el-icon-document',
-            children: [
-              {
-                index: '3-1',
-                link: '/article/articleCateList',
-                title: '文章分类'
-              },
-              {
-                index: '3-2',
-                link: '/article/articleList',
-                title: '文章列表'
-              },
-              {
-                index: '3-3',
-                link: '/article/releaseArticle',
-                title: '发布文章'
-              },
-            ]
-          },
-          {
-            index: '4',
-            link: '/labels',
-            title: '标签管理',
-            icon: 'el-icon-collection-tag'
-          },
-          {
-            index: '5',
-            link: '/charts',
-            title: '数据统计',
-            icon: 'el-icon-s-data'
-          },
-          {
-            index: '6',
-            link: '/frontDesk',
-            title: '前台页面配置',
-            icon: 'el-icon-s-help',
-            children: [
-              {
-                index: '6-1',
-                link: '/frontDesk/frontDeskNav',
-                title: '前台导航列表'
-              },
-            ]
-          },
-          {
-            index: '7',
-            link: '/config',
-            title: '基本设置',
-            icon: 'el-icon-setting',
-            children: [
-              {
-                index: '7-1',
-                link: '/config/backgroundNavList',
-                title: '后台导航列表'
-              },
-              {
-                index: '7-3',
-                link: '/config/permissions',
-                title: '权限管理'
-              },
-            ]
-          },
-        ],
+        navList: [],
         icon: require('../../uploads/userIcon/1.jpg')
       }
     },
@@ -157,6 +69,12 @@
         } else {
           this.isCollapse = true
           this.iconClass = 'el-icon-s-unfold'
+        }
+      },
+      async getNavData() {
+        let {data} = await this.$axios.get('/api/public/getBackendNavList')
+        if (data.code == 200) {
+          this.navList = data.result
         }
       }
     }
