@@ -197,7 +197,7 @@
         this.$router.push('/article/editArticleCate?id=' + id)
       },
       showSecCate(id) {
-        location.hash = '/article/secArticleCateList'
+        this.$router.push('/article/secArticleCateList?catePid=' + id)
       },
       addCate() {
         location.hash = '/article/addArticleCate'

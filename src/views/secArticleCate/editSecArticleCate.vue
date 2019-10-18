@@ -34,6 +34,18 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      let paramsArr = location.href.split('?')[1].split('&')
+      let params = {}
+      for (let i = 0; i < paramsArr.length; i++) {
+        params[paramsArr[i].split('=')[0]] = parseInt(paramsArr[i].split('=')[1])
+      }
+
+      this.catePId = params.catePId
+      this.cateId = params.cateId
+      this.linkArr[2].path += '?catePId=' + this.catePId
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
@@ -43,7 +55,7 @@
           {path: '', title: '编辑二级分类'}
         ],
         ruleForm: {
-          PcateName: 'WEB前端',
+          PcateName: '',
           cateName: ''
         },
         rules: {
@@ -51,17 +63,33 @@
             {required: true, message: '请输入文章二级类别', trigger: 'blur'},
             {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
           ],
-        }
+        },
+        catePId: 0,
+        cateId: 0
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/article/getSecCateData', {params: {id: this.cateId}})
+        if (data.code == 200) {
+          this.ruleForm.PcateName = data.result.firCN
+          this.ruleForm.cateName = data.result.cateName
+        }
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/article/editFirCateData', {
+              formData: this.ruleForm,
+              cateId: this.cateId,
+            })
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '编辑成功'
+              })
+              this.$router.push('secArticleCateList?catePId=' + this.catePId)
+            }
           }
         });
       },

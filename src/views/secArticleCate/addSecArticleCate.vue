@@ -34,6 +34,11 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.ruleForm.catePId = location.href.split('=')[1]
+      this.linkArr[2].path += '?catePId=' + this.ruleForm.catePId
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
@@ -43,7 +48,8 @@
           {path: '', title: '新增二级分类'}
         ],
         ruleForm: {
-          PcateName: 'WEB前端',
+          PcateName: '',
+          catePId: 0,
           cateName: ''
         },
         rules: {
@@ -55,13 +61,23 @@
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/article/getFirCateData', {params: {id: this.ruleForm.catePId}})
+        if (data.code == 200) {
+          this.ruleForm.PcateName = data.result.cateName
+        }
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/article/addSecCate', this.ruleForm)
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '添加成功'
+              })
+              this.$router.push('secArticleCateList?catePId=' + this.ruleForm.catePId)
+            }
           }
         });
       },
