@@ -51,12 +51,16 @@
     },
     methods: {
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/article/addFirCate', this.ruleForm)
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '添加成功'
+              })
+              this.$router.push('/article/articleCateList')
+            }
           }
         });
       },

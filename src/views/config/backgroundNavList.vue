@@ -134,6 +134,8 @@
         if (data.code == 200) {
           this.tableData = data.result
           this.totalList = data.totalPage
+
+          this.$parent.getNavData()
         }
       },
       handleSizeChange(val) {

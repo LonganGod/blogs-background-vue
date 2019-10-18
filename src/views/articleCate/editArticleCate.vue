@@ -31,6 +31,10 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.cateId = location.href.split('=')[1]
+      this.getData()
+    },
     data() {
       return {
         linkArr: [
@@ -46,17 +50,31 @@
             {required: true, message: '请输入文章一级类别', trigger: 'blur'},
             {min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur'}
           ],
-        }
+        },
+        cateId: 0
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/article/getFirCateData', {params: {id: this.cateId}})
+        if (data.code == 200) {
+          this.ruleForm.cateName = data.result.cateName
+        }
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            let {data} = await this.$axios.post('/api/article/editFirCateData', {
+              formData: this.ruleForm,
+              cateId: this.cateId,
+            })
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '编辑成功'
+              })
+              this.$router.push('/article/articleCateList')
+            }
           }
         });
       },
