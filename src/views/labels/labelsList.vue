@@ -17,12 +17,12 @@
           <el-button type="primary" class="searchBtn" size="medium">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="searchBtn" size="medium">新建标签</el-button>
+          <el-button type="primary" class="searchBtn" size="medium" @click="addLabels">新建标签</el-button>
         </el-col>
       </el-row>
       <el-table
         :data="tableData"
-        row-key="id"
+        row-key="labelId"
         border
         stripe>
         <el-table-column
@@ -33,7 +33,7 @@
           sortable>
         </el-table-column>
         <el-table-column
-          prop="tabName"
+          prop="labelName"
           label="标签标题">
         </el-table-column>
         <el-table-column
@@ -41,9 +41,12 @@
           label="相关文章数量">
         </el-table-column>
         <el-table-column
-          prop="createDate"
+          prop="createTime"
           label="创建日期"
           sortable>
+          <template slot-scope="scope">
+            {{scope.row.createTime | dateFormat}}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -53,15 +56,15 @@
             <el-button
               size="mini"
               type="success"
-              @click="edit(scope.row.id)"
+              @click="edit(scope.row.labelId)"
               plain>
               编辑
             </el-button>
             <el-button
               size="mini"
               type="warning"
-              v-if="scope.row.state == 1"
-              @click="edit(scope.row.id)"
+              v-if="scope.row.status == 1"
+              @click="change(scope.row.labelId, 2)"
               plain>
               停用
             </el-button>
@@ -69,7 +72,7 @@
               size="mini"
               type="info"
               v-else
-              @click="edit(scope.row.id)"
+              @click="change(scope.row.labelId, 1)"
               plain>
               启用
             </el-button>
@@ -77,7 +80,7 @@
               size="mini"
               type="danger"
               plain
-              @click="del(scope.row.id)">
+              @click="del(scope.row.labelId)">
               删除
             </el-button>
           </template>
@@ -88,9 +91,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20]"
-        :page-size="10"
+        :page-size="pageList"
         layout="total, prev, pager, next, sizes"
-        :total="400">
+        :total="totalPage">
       </el-pagination>
     </el-card>
   </div>
@@ -104,96 +107,98 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getDate()
+    },
     data() {
       return {
         linkArr: [
           {path: '', title: '标签管理'},
           {path: '', title: '标签列表'}
         ],
-        tableData: [
-          {
-            id: 1,
-            index: 1,
-            createDate: '2016-05-02',
-            tabName: 'lalalalalla',
-            articles: '1',
-            state: '1'
-          },
-          {
-            id: 2,
-            index: 2,
-            createDate: '2016-05-02',
-            tabName: 'lalalalalla',
-            articles: '1',
-            state: '2'
-          },
-          {
-            id: 3,
-            index: 3,
-            createDate: '2016-05-04',
-            tabName: 'lalalalalla',
-            articles: '1',
-            state: '1'
-          },
-          {
-            id: 4,
-            index: 4,
-            createDate: '2016-05-01',
-            tabName: 'lalalalalla',
-            articles: '1',
-            state: '1'
-          },
-          {
-            id: 5,
-            index: 5,
-            createDate: '2016-05-03',
-            tabName: 'lalalalalla',
-            articles: '2',
-            state: '1'
-          },
-          {
-            id: 6,
-            index: 6,
-            createDate: '2016-05-03',
-            tabName: 'lalalalalla',
-            articles: '1',
-            state: '1'
-          }
-        ],
+        tableData: [],
         tabName: '',
+        totalPage: 0,
+        pageList: 5,
+        currentPage: 1,
       }
     },
     methods: {
+      async getDate() {
+        let {data} = await this.$axios.get('/api/labels/getLabelsList', {
+          params: {
+            currentPage: this.currentPage,
+            pageList: this.pageList,
+          }
+        })
+        if (data.code == 200) {
+          this.totalPage = data.totalPage
+          for (let i = 0; i < data.result.length; i++) {
+            data.result[i].index = i + 1
+          }
+          this.tableData = data.result
+        }
+      },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageList = val
+        this.getDate()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.getDate()
+      },
+      addLabels() {
+        this.$router.push('/labels/addLabels')
       },
       edit(id) {
-        console.log(id)
-        location.hash = '/article/editArticle'
+        this.$router.push('/labels/editLabels?id=' + id)
       },
-      details(id) {
-        console.log(id)
+      change(id, status) {
+        this.$confirm('此操作将改变该标签状态, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let {data} = await this.$axios.get('/api/article/changeLabelsStatus', {
+            params: {
+              status: status,
+              id: id
+            }
+          })
+
+          if (data.code == 200 && status == 2) {
+            this.$message({
+              type: 'success',
+              message: '停用成功!'
+            });
+            this.getDate()
+          } else if (data.code == 200 && status == 1) {
+            this.$message({
+              type: 'success',
+              message: '启用成功!'
+            });
+            this.getDate()
+          }
+        })
       },
       del(id) {
         this.$confirm('此操作将永久删除该标签, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-        console.log(id)
+        }).then(async () => {
+          let {data} = await this.$axios.get('/api/article/deleteLabelsStatus', {
+            params: {id: id}
+          })
+
+          if (data.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getDate()
+          }
+        })
       },
     }
   }
