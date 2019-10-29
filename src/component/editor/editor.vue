@@ -4,7 +4,7 @@
     <el-upload
       class="avatar-uploader"
       :action="serverUrl"
-      name="file"
+      name="articleImg"
       :headers="header"
       :show-file-list="false"
       list-type="picture"
@@ -47,17 +47,7 @@
   import "quill/dist/quill.bubble.css";
 
   export default {
-    props: {
-      /*编辑器的内容*/
-      value: {
-        type: String
-      },
-      /*图片大小*/
-      maxSize: {
-        type: Number,
-        default: 4000 //kb
-      }
-    },
+    props: ['value'],
     components: {
       quillEditor
     },
@@ -84,7 +74,7 @@
             }
           }
         },
-        serverUrl: "https://testihospitalapi.ebaiyihui.com/oss/api/file/store/v1/saveFile", // 这里写你要上传的图片服务器地址
+        serverUrl: "/api/imgUploads", // 这里写你要上传的图片服务器地址
         header: {
           // token: sessionStorage.token
         } // 有的图片服务器要求请求头需要有token
@@ -102,8 +92,6 @@
       },
       // 富文本图片上传成功
       uploadSuccess(res, file) {
-        // res为图片服务器返回的数据
-
         // 获取富文本组件实例
         let quill = this.$refs.myQuillEditor.quill;
         // 如果上传成功
@@ -111,7 +99,7 @@
           // 获取光标所在位置
           let length = quill.getSelection().index;
           // 插入图片  res.url为服务器返回的图片地址
-          quill.insertEmbed(length, "image", res.result.url);
+          quill.insertEmbed(length, "image", res.path);
           // 调整光标到最后
           quill.setSelection(length + 1);
         } else {
