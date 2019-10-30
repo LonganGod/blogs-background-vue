@@ -68,7 +68,8 @@
           <Editor @input="editorChange"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm', 1)">立即发布</el-button>
+          <el-button type="warning" @click="submitForm('ruleForm', 2)">保存草稿</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -143,7 +144,7 @@
         }
       },
       // 提交表单
-      submitForm(formName) {
+      submitForm(formName, status) {
         if (this.ruleForm.article == '') {
           this.$message({
             type: 'warning',
@@ -156,7 +157,8 @@
           articleCate: this.ruleForm.cate[1],
           articleLabel: [],
           articleImg: [],
-          articleContent: this.ruleForm.article
+          articleContent: this.ruleForm.article,
+          status: status
         }
         for (let i = 0; i < this.ruleForm.tags.length; i++) {
           params.articleLabel.push(this.ruleForm.tags[i].labelId)

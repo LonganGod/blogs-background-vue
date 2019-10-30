@@ -17,6 +17,7 @@
           <el-cascader
             v-model="cate"
             :options="cateList"
+            :props="cateKey"
             clearable
             :show-all-levels="false"
             placeholder="请选择文章分类">
@@ -45,44 +46,47 @@
           sortable>
         </el-table-column>
         <el-table-column
-          prop="articleName"
+          prop="articleTitle"
           label="文章标题">
         </el-table-column>
         <el-table-column
-          prop="cate"
+          prop="cateName"
           label="所属分类"
           width="250">
         </el-table-column>
         <el-table-column
-          prop="tags"
+          prop="articleLabel"
           label="标签"
-          width="250"
+          width="300"
           align="center">
           <template slot-scope="scope">
-            <template v-for="(item, index) in scope.row.tags">
-              <el-tag v-if="index != scope.row.tags.length - 1" style="margin-right: 10px;">
-                {{item.name}}
+            <template v-for="(item, index) in scope.row.articleLabel">
+              <el-tag v-if="index != scope.row.articleLabel.length - 1" style="margin-right: 10px;">
+                {{item.labelName}}
               </el-tag>
-              <el-tag v-else>{{item.name}}</el-tag>
+              <el-tag v-else>{{item.labelName}}</el-tag>
             </template>
           </template>
         </el-table-column>
         <el-table-column
-          prop="state"
+          prop="status"
           label="状态"
           width="80"
           align="center">
           <template slot-scope="scope">
-            <template v-if="scope.row.state == 1">已发布</template>
-            <template v-if="scope.row.state == 2">草稿</template>
+            <template v-if="scope.row.status == 1">已发布</template>
+            <template v-if="scope.row.status == 2">草稿</template>
           </template>
         </el-table-column>
         <el-table-column
-          prop="createDate"
+          prop="createTime"
           label="创建日期"
-          width="120"
+          width="200"
           align="center"
           sortable>
+          <template slot-scope="scope">
+            {{scope.row.createTime | dateFormat}}
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -92,7 +96,7 @@
             <el-button
               size="mini"
               type="success"
-              @click="edit(scope.row.id)"
+              @click="edit(scope.row.articleId)"
               plain>
               编辑
             </el-button>
@@ -100,7 +104,7 @@
               size="mini"
               type="danger"
               plain
-              @click="del(scope.row.id)">
+              @click="del(scope.row.articleId)">
               删除
             </el-button>
           </template>
@@ -111,9 +115,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20]"
-        :page-size="10"
+        :page-size="pageList"
         layout="total, prev, pager, next, sizes"
-        :total="400">
+        :total="totalPage">
       </el-pagination>
     </el-card>
   </div>
@@ -127,169 +131,61 @@
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
+    created() {
+      this.getData()
+      this.getCate()
+    },
     data() {
       return {
         linkArr: [
           {path: '', title: '文章管理'},
           {path: '', title: '文章列表'}
         ],
-        cateList: [
-          {
-            value: 'zhinan',
-            label: '指南',
-            children: [
-              {
-                value: 'shejiyuanze',
-                label: '设计原则'
-              },
-              {
-                value: 'daohang',
-                label: '导航'
-              }
-            ]
-          },
-          {
-            value: 'zujian',
-            label: '组件',
-            children: [
-              {
-                value: 'basic',
-                label: 'Basic'
-              },
-              {
-                value: 'form',
-                label: 'Form'
-              },
-              {
-                value: 'data',
-                label: 'Data'
-              },
-              {
-                value: 'notice',
-                label: 'Notice'
-              },
-              {
-                value: 'navigation',
-                label: 'Navigation'
-              },
-              {
-                value: 'others',
-                label: 'Others'
-              }
-            ]
-          },
-          {
-            value: 'ziyuan',
-            label: '资源',
-            children: [
-              {
-                value: 'axure',
-                label: 'Axure Components'
-              },
-              {
-                value: 'sketch',
-                label: 'Sketch Templates'
-              },
-              {
-                value: 'jiaohu',
-                label: '组件交互文档'
-              }
-            ]
-          }
-        ],
-        tableData: [
-          {
-            id: 1,
-            index: 1,
-            createDate: '2016-05-02',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-s-home',
-            tags: [
-              {id: 1, name: 'JS'},
-              {id: 2, name: 'CSS'},
-            ],
-            state: '1'
-          },
-          {
-            id: 2,
-            index: 2,
-            createDate: '2016-05-02',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-user-solid',
-            tags: [
-              {id: 1, name: 'WEB'},
-              {id: 2, name: 'CSS'},
-            ],
-            state: '1'
-          },
-          {
-            id: 3,
-            index: 3,
-            createDate: '2016-05-04',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-document',
-            tags: [
-              {id: 1, name: 'JS'},
-              {id: 2, name: 'HTML'},
-            ],
-            state: '1'
-          },
-          {
-            id: 4,
-            index: 4,
-            createDate: '2016-05-01',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-collection-tag',
-            tags: [
-              {id: 1, name: 'VUE'},
-              {id: 2, name: 'WEB'},
-            ],
-            state: '1'
-          },
-          {
-            id: 5,
-            index: 5,
-            createDate: '2016-05-03',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-s-data',
-            tags: [
-              {id: 1, name: '随笔'},
-              {id: 2, name: 'CSS'},
-            ],
-            state: '2'
-          },
-          {
-            id: 6,
-            index: 6,
-            createDate: '2016-05-03',
-            articleName: 'lalalalalla',
-            cate: 'el-icon-setting',
-            tags: [
-              {id: 1, name: 'JS'},
-              {id: 2, name: '随笔'},
-            ],
-            state: '1'
-          }
-        ],
+        cateList: [],
+        cateKey: {
+          value: 'cateId',
+          label: 'cateName',
+          children: 'children'
+        },
+        tableData: [],
         currentPage: 1,
+        pageList: 5,
+        totalPage: 0,
         articleName: '',
         cate: '',
         state: ''
       }
     },
     methods: {
+      async getData() {
+        let {data} = await this.$axios.get('/api/article/getArticleList', {
+          params: {
+            currentPage: this.currentPage,
+            pageList: this.pageList
+          }
+        })
+
+        if (data.code == 200) {
+          this.tableData = data.result
+          this.totalPage = data.totalPage
+        }
+      },
+      async getCate() {
+        let {data} = await this.$axios.get('/api/article/articlePageGetCate')
+        if (data.code == 200) {
+          this.cateList = data.result
+        }
+      },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageList = val
+        this.getData()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val
+        this.getData()
       },
       edit(id) {
-        console.log(id)
-        location.hash = '/article/editArticle'
-      },
-      details(id) {
-        console.log(id)
+        this.$router.push('/article/editArticle?articleId=' + id)
       },
       del(id) {
         this.$confirm('此操作将永久删除该篇文章, 是否继续?', '提示', {
