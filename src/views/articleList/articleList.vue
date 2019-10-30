@@ -39,8 +39,9 @@
               <el-tag
                 v-if="index != scope.row.articleLabel.length - 1"
                 style="margin-right: 10px;"
+                :key="item.articleId"
               >{{item.labelName}}</el-tag>
-              <el-tag v-else>{{item.labelName}}</el-tag>
+              <el-tag v-else :key="item.articleId">{{item.labelName}}</el-tag>
             </template>
           </template>
         </el-table-column>
