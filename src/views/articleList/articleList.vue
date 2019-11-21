@@ -40,7 +40,8 @@
                 v-if="index != scope.row.articleLabel.length - 1"
                 style="margin-right: 10px;"
                 :key="item.articleId"
-              >{{item.labelName}}</el-tag>
+              >{{item.labelName}}
+              </el-tag>
               <el-tag v-else :key="item.articleId">{{item.labelName}}</el-tag>
             </template>
           </template>
@@ -54,9 +55,13 @@
         <el-table-column prop="createTime" label="创建日期" width="200" align="center" sortable>
           <template slot-scope="scope">{{scope.row.createTime | dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="240" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="edit(scope.row.articleId)" plain>编辑</el-button>
+            <el-button v-if="scope.row.status == 1" size="mini" type="info" plain disabled>发布</el-button>
+            <el-button v-if="scope.row.status == 2" size="mini" type="primary" plain
+                       @click="release(scope.row.articleId)">发布
+            </el-button>
+            <el-button size="mini" type="success" plain @click="edit(scope.row.articleId)">编辑</el-button>
             <el-button size="mini" type="danger" plain @click="del(scope.row.articleId)">删除</el-button>
           </template>
         </el-table-column>
@@ -75,97 +80,117 @@
 </template>
 
 <script>
-import WSBreadcrumb from "../../component/breadcrumb/breadcrumb";
+  import WSBreadcrumb from "../../component/breadcrumb/breadcrumb";
 
-export default {
-  name: "articleList",
-  components: {
-    WSBreadcrumb: WSBreadcrumb
-  },
-  created() {
-    this.getData();
-    this.getCate();
-  },
-  data() {
-    return {
-      linkArr: [
-        { path: "", title: "文章管理" },
-        { path: "", title: "文章列表" }
-      ],
-      cateList: [],
-      cateKey: {
-        value: "cateId",
-        label: "cateName",
-        children: "children"
-      },
-      tableData: [],
-      currentPage: 1,
-      pageList: 5,
-      totalPage: 0,
-      articleName: "",
-      cate: "",
-      state: ""
-    };
-  },
-  methods: {
-    async getData() {
-      let { data } = await this.$axios.get("/api/article/getArticleList", {
-        params: {
-          currentPage: this.currentPage,
-          pageList: this.pageList
-        }
-      });
-
-      if (data.code == 200) {
-        this.tableData = data.result;
-        this.totalPage = data.totalPage;
-      }
+  export default {
+    name: "articleList",
+    components: {
+      WSBreadcrumb: WSBreadcrumb
     },
-    async getCate() {
-      let { data } = await this.$axios.get("/api/article/articlePageGetCate");
-      if (data.code == 200) {
-        this.cateList = data.result;
-      }
-    },
-    handleSizeChange(val) {
-      this.pageList = val;
+    created() {
       this.getData();
+      this.getCate();
     },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.getData();
+    data() {
+      return {
+        linkArr: [
+          {path: "", title: "文章管理"},
+          {path: "", title: "文章列表"}
+        ],
+        cateList: [],
+        cateKey: {
+          value: "cateId",
+          label: "cateName",
+          children: "children"
+        },
+        tableData: [],
+        currentPage: 1,
+        pageList: 5,
+        totalPage: 0,
+        articleName: "",
+        cate: "",
+        state: ""
+      };
     },
-    edit(id) {
-      this.$router.push("/article/editArticle?articleId=" + id);
-    },
-    del(id) {
-      this.$confirm("此操作将永久删除该篇文章, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+    methods: {
+      async getData() {
+        let {data} = await this.$axios.get("/api/article/getArticleList", {
+          params: {
+            currentPage: this.currentPage,
+            pageList: this.pageList
+          }
         });
-      console.log(id);
+
+        if (data.code == 200) {
+          this.tableData = data.result;
+          this.totalPage = data.totalPage;
+        }
+      },
+      async getCate() {
+        let {data} = await this.$axios.get("/api/article/articlePageGetCate");
+        if (data.code == 200) {
+          this.cateList = data.result;
+        }
+      },
+      handleSizeChange(val) {
+        this.pageList = val;
+        this.getData();
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
+        this.getData();
+      },
+      edit(id) {
+        this.$router.push("/article/editArticle?articleId=" + id);
+      },
+      del(id) {
+        this.$confirm("此操作将永久删除该篇文章, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(async () => {
+            let {data} = await this.$axios.get('/api/article/deleteArticle', {params: {id}})
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getData()
+            }
+          })
+          .catch(() => {
+            return false
+          });
+      },
+      release(id) {
+        this.$confirm("此操作将发布该篇文章, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(async () => {
+            let {data} = await this.$axios.get('/api/article/releaseArticle', {params: {id}})
+            if (data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '发布成功!'
+              });
+              this.getData()
+            }
+          })
+          .catch(() => {
+            return false
+          });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
-.el-cascader,
-.el-select {
-  line-height: 1;
-  width: 100%;
-}
+  .el-cascader,
+  .el-select {
+    line-height: 1;
+    width: 100%;
+  }
 </style>
