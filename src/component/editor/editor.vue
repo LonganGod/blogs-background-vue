@@ -47,13 +47,13 @@
   import "quill/dist/quill.bubble.css";
 
   export default {
-    props: ['value'],
+    props: ['articleContent'],
     components: {
       quillEditor
     },
     data() {
       return {
-        content: this.value,
+        content: '',
         quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
         editorOption: {
           theme: "snow",
@@ -113,6 +113,11 @@
         // loading动画消失
         this.quillUpdateImg = false;
         this.$message.error("图片插入失败");
+      }
+    },
+    watch: {
+      articleContent() {
+        this.content = this.articleContent
       }
     }
   };
