@@ -31,6 +31,9 @@ import {
   Timeline,
   TimelineItem,
   Upload,
+  Steps,
+  Step,
+  Tree,
 } from 'element-ui';
 
 import 'element-ui/lib/theme-chalk/index.css';
@@ -65,6 +68,9 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Cascader);
 Vue.use(Upload);
+Vue.use(Steps);
+Vue.use(Step);
+Vue.use(Tree);
 
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
