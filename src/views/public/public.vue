@@ -75,6 +75,7 @@
         let {data} = await this.$axios.get('/api/public/getBackendNavList')
         if (data.code == 200) {
           this.navList = data.result
+          console.log(data.result)
         }
       }
     }

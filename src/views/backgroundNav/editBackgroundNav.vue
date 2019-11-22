@@ -58,7 +58,6 @@
       this.getFirNavData()
       this.ruleForm.navId = location.hash.split('?')[1].split('=')[1]
       this.getData()
-      console.log(this.ruleForm)
     },
     data() {
       return {

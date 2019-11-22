@@ -1,6 +1,7 @@
-import BackgroundNavList from '../../views/config/backgroundNavList'
-import AddBackgroundNav from '../../views/config/addBackGroundNav'
-import EditBackgroundNav from '../../views/config/editBackgroundNav'
+import BackgroundNavList from '../../views/backgroundNav/backgroundNavList'
+import AddBackgroundNav from '../../views/backgroundNav/addBackGroundNav'
+import EditBackgroundNav from '../../views/backgroundNav/editBackgroundNav'
+import RoleList from '../../views/role/roleList'
 
 export default [
   {
@@ -17,5 +18,10 @@ export default [
     name: 'EditBackgroundNav',
     path: '/config/editBackgroundNav',
     component: EditBackgroundNav
+  },
+  {
+    name: 'RoleList',
+    path: '/config/roleList',
+    component: RoleList
   },
 ]
