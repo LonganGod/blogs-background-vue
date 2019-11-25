@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="父级角色：" prop="rolePId">
             <el-select v-model="ruleForm.rolePId" placeholder="请选择父级导航">
-              <el-option label="无" value="0"></el-option>
+              <el-option label="无" :value="0"></el-option>
               <template v-for="item in pRoleList">
                 <el-option :label="item.roleName" :value="item.roleId" :key="item.roleId"></el-option>
               </template>
@@ -75,7 +75,7 @@
         ],
         ruleForm: {
           roleName: '',
-          rolePId: '0',
+          rolePId: 0,
           permissionsIds: ''
         },
         rules: {

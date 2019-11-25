@@ -59,7 +59,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="edit(scope.row.roleId)"
+              @click="edit(scope.row.roleId, 1)"
               plain>
               编辑权限
             </el-button>

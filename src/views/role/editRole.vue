@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="父级角色：" prop="rolePId">
             <el-select v-model="ruleForm.rolePId" placeholder="请选择父级导航">
-              <el-option label="无" value="0"></el-option>
+              <el-option label="无" :value="0"></el-option>
               <template v-for="item in pRoleList">
                 <el-option :label="item.roleName" :value="item.roleId" :key="item.roleId"></el-option>
               </template>
@@ -77,7 +77,7 @@
         ruleForm: {
           roleId: null,
           roleName: '',
-          rolePId: '0',
+          rolePId: 0,
           permissionsIds: ''
         },
         rules: {
@@ -93,7 +93,8 @@
           children: 'children',
           label: 'permissionsName',
           id: 'permissionsId'
-        }
+        },
+        param: {}
       }
     },
     methods: {
@@ -108,13 +109,12 @@
       },
       async getData() {
         let paramsArr = location.href.split('?')[1].split('&')
-        let param = {}
         for (let i = 0; i < paramsArr.length; i++) {
-          param[paramsArr[i].split('=')[0]] = paramsArr[i].split('=')[1]
+          this.param[paramsArr[i].split('=')[0]] = paramsArr[i].split('=')[1]
         }
 
-        this.ruleForm.roleId = param.roleId
-        this.action = parseInt(param.action)
+        this.ruleForm.roleId = this.param.roleId
+        this.action = parseInt(this.param.action)
 
         let {data} = await this.$axios.get('/api/role/getRoleData', {
           params: {
@@ -123,7 +123,7 @@
         })
         if (data.code == 200) {
           this.ruleForm.roleName = data.result.roleName
-          this.ruleForm.rolePId = data.result.rolePId + ''
+          this.ruleForm.rolePId = data.result.rolePId
           this.ruleForm.permissionsIds = data.result.rolePermissions
           this.selectPermissionsIds = data.result.rolePermissions != null ? data.result.rolePermissions.split(',') : []
         }
@@ -156,9 +156,11 @@
       submitForm(formName) {
         this.ruleForm.permissionsIds = this.$refs.permissionsTree.getCheckedKeys().join(',')
 
+        let url = this.param.action == 0 ? '/api/role/editRole' : '/api/role/editRoleIncludeChildren'
+
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            let {data} = await this.$axios.post('/api/role/editRole', this.ruleForm)
+            let {data} = await this.$axios.post(url, this.ruleForm)
             if (data.code == 200) {
               this.$message({
                 type: 'success',
