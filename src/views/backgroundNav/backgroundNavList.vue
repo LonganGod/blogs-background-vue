@@ -146,7 +146,6 @@
         this.currentPage = val
         this.getData()
       },
-
       addNav() {
         this.$router.push('/config/addBackgroundNav')
       },

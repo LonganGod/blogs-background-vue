@@ -139,7 +139,7 @@
 
         if (data.code == 200) {
           for (let i = 0; i < data.result.length; i++) {
-            data.result[i].index = i + 1
+            data.result[i].index = i + 1 + (this.pageList * (this.currentPage - 1))
           }
           this.tdObjArr = data.result
           this.totalPage = data.totalPage

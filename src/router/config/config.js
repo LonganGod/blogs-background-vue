@@ -4,6 +4,7 @@ import EditBackgroundNav from '../../views/backgroundNav/editBackgroundNav'
 import RoleList from '../../views/role/roleList'
 import AddRole from '../../views/role/addRole'
 import EditRole from '../../views/role/editRole'
+import PermissionList from '../../views/permission/permissionList'
 
 export default [
   {
@@ -35,5 +36,10 @@ export default [
     name: 'EditRole',
     path: '/config/editRole',
     component: EditRole
+  },
+  {
+    name: 'PermissionList',
+    path: '/config/permissionList',
+    component: PermissionList
   },
 ]

@@ -139,7 +139,7 @@
 
         if (data.code == 200) {
           for (let i = 0; i < data.result.length; i++) {
-            data.result[i].index = i + 1
+            data.result[i].index = i + 1 + (this.pageList * (this.currentPage - 1))
           }
           this.tdObjArr = data.result
           this.totalList = data.totalPage
@@ -153,7 +153,6 @@
         this.currentPage = val
         this.getData()
       },
-
       changeStatus(id, status) {
         let quertion = status == 1 ? '此操作将启用该条分类, 是否继续?' : '此操作将停用该条分类, 是否继续?'
         let resultStr = status == 1 ? '启用成功' : '停用成功'

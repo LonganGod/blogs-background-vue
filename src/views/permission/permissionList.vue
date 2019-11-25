@@ -1,5 +1,5 @@
 <template>
-  <div class="roleListBox">
+  <div class="permissionListBox">
     <el-card class="box-card">
       <WSBreadcrumb :linkArr="linkArr"></WSBreadcrumb>
     </el-card>
@@ -22,7 +22,7 @@
       </el-row>
       <el-table
         :data="tableData"
-        row-key="roleId"
+        row-key="permissionsId"
         border>
         <el-table-column
           prop="index"
@@ -32,8 +32,12 @@
           sortable>
         </el-table-column>
         <el-table-column
-          prop="roleName"
-          label="角色名称">
+          prop="permissionsName"
+          label="权限名称">
+        </el-table-column>
+        <el-table-column
+          prop="permissionsUrl"
+          label="权限Url">
         </el-table-column>
         <el-table-column
           prop="createTime"
@@ -51,14 +55,14 @@
             <el-button
               size="mini"
               type="success"
-              @click="edit(scope.row.roleId, 0)"
+              @click="edit(scope.row.permissionsId, 0)"
               plain>
               编辑
             </el-button>
             <el-button
               size="mini"
               type="primary"
-              @click="edit(scope.row.roleId, 1)"
+              @click="edit(scope.row.permissionsId, 1)"
               plain>
               编辑权限
             </el-button>
@@ -66,7 +70,7 @@
               size="mini"
               type="danger"
               plain
-              @click="del(scope.row.roleId)">
+              @click="del(scope.row.permissionsId)">
               删除
             </el-button>
           </template>
@@ -89,7 +93,7 @@
   import WSBreadcrumb from '../../component/breadcrumb/breadcrumb'
 
   export default {
-    name: "roleList",
+    name: "permissionList",
     components: {
       'WSBreadcrumb': WSBreadcrumb
     },
@@ -100,7 +104,7 @@
       return {
         linkArr: [
           {path: '', title: '基本设置'},
-          {path: '', title: '角色管理列表'}
+          {path: '', title: '权限列表'}
         ],
         tableData: [],
         roleName: '',
@@ -111,13 +115,12 @@
     },
     methods: {
       async getDate() {
-        let {data} = await this.$axios.get('/api/role/getRoleList', {
+        let {data} = await this.$axios.get('/api/permission/getPermissionList', {
           params: {
             currentPage: this.currentPage,
             pageList: this.pageList,
           }
         })
-        console.log(data)
         if (data.code == 200) {
           this.totalPage = data.totalPage
           for (let i = 0; i < data.result.length; i++) {
@@ -164,13 +167,13 @@
 </script>
 
 <style scoped>
-  .roleListBox /deep/ .el-table__row--level-1 td {
+  .permissionListBox /deep/ .el-table__row--level-1 td {
     background-color: #FAFAFA;
     padding-left: 20px;
   }
 
-  .roleListBox /deep/ .el-table__row--level-1 td:last-child,
-  .roleListBox /deep/ .el-table__row--level-1 td:first-child {
+  .permissionListBox /deep/ .el-table__row--level-1 td:last-child,
+  .permissionListBox /deep/ .el-table__row--level-1 td:first-child {
     padding-left: 0;
   }
 </style>

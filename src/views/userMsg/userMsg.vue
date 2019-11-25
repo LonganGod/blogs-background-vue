@@ -126,7 +126,7 @@
             var item = data.result[i];
             var obj = {};
             obj.id = item.msgId;
-            obj.index = i + 1;
+            obj.index = i + 1 + (this.pageList * (this.currentPage - 1));
             obj.nickName = item.nickName;
             obj.msgDetail = item.msgDetail;
             obj.article = '相关文章';

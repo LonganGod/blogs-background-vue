@@ -157,7 +157,7 @@
             var item = data.result[i];
             var obj = {};
             obj.id = item.userId;
-            obj.index = i + 1;
+            obj.index = i + 1 + (this.pageList * (this.currentPage - 1));
             obj.icon = item.userIcon == null ? '' : item.userIcon;
             obj.userName = item.userName;
             obj.nickName = item.nickName;

@@ -134,7 +134,7 @@
         if (data.code == 200) {
           this.totalPage = data.totalPage
           for (let i = 0; i < data.result.length; i++) {
-            data.result[i].index = i + 1
+            data.result[i].index = i + 1 + (this.pageList * (this.currentPage - 1))
           }
           this.tableData = data.result
         }
