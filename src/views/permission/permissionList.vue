@@ -17,7 +17,7 @@
           <el-button type="primary" class="searchBtn" size="medium">查询</el-button>
         </el-col>
         <el-col :span="4" :push="12" align="right">
-          <el-button type="primary" class="searchBtn" size="medium" @click="addRole">新建角色</el-button>
+          <el-button type="primary" class="searchBtn" size="medium" @click="addPermissionCate">新建权限分类</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -55,14 +55,15 @@
             <el-button
               size="mini"
               type="success"
-              @click="edit(scope.row.permissionsId, 0)"
+              @click="edit(scope.row.permissionsId)"
               plain>
               编辑
             </el-button>
             <el-button
+              v-if="!scope.row.flag"
               size="mini"
               type="primary"
-              @click="edit(scope.row.permissionsId, 1)"
+              @click="editPermission(scope.row.permissionsId)"
               plain>
               编辑权限
             </el-button>
@@ -104,7 +105,7 @@
       return {
         linkArr: [
           {path: '', title: '基本设置'},
-          {path: '', title: '权限列表'}
+          {path: '', title: '权限分类列表'}
         ],
         tableData: [],
         roleName: '',
@@ -125,9 +126,11 @@
           this.totalPage = data.totalPage
           for (let i = 0; i < data.result.length; i++) {
             data.result[i].index = i + 1 + (this.pageList * (this.currentPage - 1))
+            data.result[i].flag = data.result[i].children.length == 0 ? false : true
           }
           this.tableData = data.result
         }
+        console.log(this.tableData)
       },
       handleSizeChange(val) {
         this.pageList = val
@@ -137,19 +140,22 @@
         this.currentPage = val
         this.getDate()
       },
-      addRole() {
-        this.$router.push('/config/addRole')
+      addPermissionCate() {
+        this.$router.push('/config/addPermissionCate')
       },
-      edit(id, action) {
-        this.$router.push(`/config/editRole?roleId=${id}&action=${action}`)
+      edit(id) {
+        this.$router.push(`/config/editPermissionCate?permissionId=${id}`)
+      },
+      editPermission(id) {
+        this.$router.push(`/config/editPermission?permissionId=${id}`)
       },
       del(id) {
-        this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async () => {
-          let {data} = await this.$axios.get('/api/config/deleteRole', {
+          let {data} = await this.$axios.get('/api/permission/deletePermissionCate', {
             params: {id: id}
           })
 

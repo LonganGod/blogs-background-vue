@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="父级导航：" prop="parentNavName">
           <el-select v-model="ruleForm.parentNavName" placeholder="请选择父级导航">
-            <el-option label="无" value="0"></el-option>
+            <el-option label="无" :value="0"></el-option>
             <template v-for="item in firNavList">
               <el-option :label="item.navName" :value="item.navId" :key="item.navId"></el-option>
             </template>
@@ -63,7 +63,7 @@
         ],
         ruleForm: {
           navName: '',
-          parentNavName: '0',
+          parentNavName: 0,
           navIcon: '',
           navUrl: '',
           navPosition: '',
