@@ -12,17 +12,28 @@
         label-width="150px"
         class="demo-ruleForm">
         <template v-for="(item, index) in ruleForm.permissionList">
-          <el-form-item :label="`权限名称${index + 1}：`" :prop="`permissionList.${index}.permissionsName`"
-                        :rules="rules.permissionsName">
-            <el-input v-model="item.permissionsName"></el-input>
-          </el-form-item>
-          <el-form-item :label="`权限路径${index + 1}：`" :prop="`permissionList.${index}.permissionsUrl`"
-                        :rules="rules.permissionsUrl">
-            <el-input v-model="item.permissionsUrl"></el-input>
-          </el-form-item>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item :label="`权限名称${index + 1}：`" :prop="`permissionList.${index}.permissionsName`"
+                            :rules="rules.permissionsName">
+                <el-input v-model="item.permissionsName"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="14">
+              <el-form-item :label="`权限路径${index + 1}：`" :prop="`permissionList.${index}.permissionsUrl`"
+                            :rules="rules.permissionsUrl">
+                <el-input v-model="item.permissionsUrl"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <el-button v-if="index != 0" class="del-btn" icon="el-icon-delete" size="small" round
+                         @click="deletePermission(index)"></el-button>
+            </el-col>
+          </el-row>
         </template>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">确认编辑</el-button>
+          <el-button type="warning" @click="addPermission('ruleForm')">新增权限</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -70,14 +81,18 @@
           }
         })
         if (data.code == 200) {
-          this.ruleForm.permissionList = data.result
+          this.ruleForm.permissionList = data.result.length == 0 ? [{
+            permissionsName: '',
+            permissionsUrl: ''
+          }] : data.result
           console.log(data.result)
         }
       },
       submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            let {data} = await this.$axios.post('/api/permission/editPermissionCate', this.ruleForm)
+            console.log(this.ruleForm)
+            let {data} = await this.$axios.post('/api/permission/editPermission', this.ruleForm)
             if (data.code == 200) {
               this.$message({
                 type: 'success',
@@ -88,22 +103,25 @@
           }
         });
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      addPermission(formName) {
+        this.$refs[formName].validate(async (valid) => {
+          if (valid) {
+            this.ruleForm.permissionList.push({
+              permissionsName: '',
+              permissionsUrl: ''
+            })
+          }
+        });
       },
-      changeInput(value, prop) {
-        this.ruleForm[prop] = value
+      deletePermission(index) {
+        this.ruleForm.permissionList.pop(this.ruleForm.permissionList[index])
       }
     }
   }
 </script>
 
 <style scoped>
-  .el-form {
-    width: 1000px;
-  }
-
-  .el-input, .el-select {
-    width: 850px;
+  .del-btn {
+    margin: 5px 20px;
   }
 </style>
