@@ -47,8 +47,25 @@
         this.userName = ''
         this.password = ''
       },
-      login() {
-        this.$router.push('/public')
+      async login() {
+        let {data} = await this.$axios.post('/api/checkLogin', {
+          userName: this.userName,
+          password: this.password
+        })
+        if (data.code == 200) {
+          this.$message({
+            type: 'success',
+            message: '登陆成功!'
+          });
+          window.sessionStorage.setItem('adminId', data.result.adminId)
+          window.sessionStorage.setItem('adminName', data.result.adminName)
+          this.$router.push('/public')
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '用户名或密码不正确!'
+          });
+        }
       }
     }
   }

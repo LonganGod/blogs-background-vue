@@ -5,7 +5,7 @@
       <el-button type="info" :icon="iconClass" class="checkIconNav left" @click="checkIconNav"></el-button>
       <p class="userInfo right">
         <el-avatar size="large" :src="icon"></el-avatar>
-        admin
+        {{adminName}}
       </p>
     </header>
     <div class="publicBody">
@@ -52,13 +52,15 @@
     name: "public",
     created() {
       this.getNavData()
+      this.getData()
     },
     data() {
       return {
         iconClass: 'el-icon-menu',
         isCollapse: false,  // 导航收起
         navList: [],
-        icon: require('../../uploads/userIcon/1.jpg')
+        adminName: '',
+        icon: ''
       }
     },
     methods: {
@@ -76,6 +78,18 @@
         if (data.code == 200) {
           this.navList = data.result
           console.log(data.result)
+        }
+      },
+      async getData() {
+        let {data} = await this.$axios.get('/api/public/getAdminData', {
+          params: {
+            id: window.sessionStorage.getItem('adminId')
+          }
+        })
+        if (data.code == 200) {
+          console.log(data.result)
+          this.adminName = data.result.adminName
+          this.icon = data.result.adminIcon
         }
       }
     }
