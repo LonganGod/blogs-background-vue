@@ -50,7 +50,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="250"
+          width="350"
           align="center">
           <template slot-scope="scope">
             <el-button
@@ -75,6 +75,22 @@
               plain
               v-if="scope.row.navStatus == 2">
               启用
+            </el-button>
+            <el-button
+              v-if="!scope.row.flag"
+              size="mini"
+              type="primary"
+              @click="editPermission(scope.row.navId)"
+              plain>
+              编辑权限
+            </el-button>
+            <el-button
+              v-if="scope.row.flag"
+              size="mini"
+              type="info"
+              disabled
+              plain>
+              编辑权限
             </el-button>
             <el-button
               size="mini"
@@ -132,10 +148,14 @@
           }
         })
         if (data.code == 200) {
+          for (let i = 0; i < data.result.length; i++) {
+            data.result[i].flag = data.result[i].children.length == 0 ? false : true
+          }
+
           this.tableData = data.result
           this.totalList = data.totalPage
 
-          this.$parent.getNavData()
+          this.$parent.getData()
         }
       },
       handleSizeChange(val) {
@@ -151,6 +171,9 @@
       },
       edit(id) {
         this.$router.push('/config/editBackgroundNav?navId=' + id)
+      },
+      editPermission(id) {
+        this.$router.push(`/config/editPermission?navId=${id}`)
       },
       disable(id) {
         this.$confirm('此操作将停用该条导航, 是否继续?', '提示', {
@@ -187,7 +210,6 @@
         }).catch(() => {
           return false
         });
-        console.log(id)
       },
       del(id) {
         this.$confirm('此操作将永久删除该条导航, 是否继续?', '提示', {

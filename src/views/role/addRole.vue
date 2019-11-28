@@ -39,7 +39,7 @@
             default-expand-all
             check-on-click-node
             :expand-on-click-node="false"
-            node-key="permissionsId"
+            node-key="navId"
             :default-checked-keys="selectPermissionsIds"
             ref="permissionsTree"
             :props="treeProps">
@@ -89,17 +89,17 @@
         selectPermissionsIds: [],
         treeProps: {
           children: 'children',
-          label: 'permissionsName',
-          id: 'permissionsId'
+          label: 'navName',
+          id: 'navId'
         }
       }
     },
     methods: {
       getLvThreeArr(arr, id, newArr) {
         for (let i = 0; i < arr.length; i++) {
-          if (arr[i].permissionsPId == id) {
+          if (arr[i].navPId == id) {
             newArr.push(arr[i])
-            arr[i].children = this.getLvThreeArr(arr, arr[i].permissionsId, [])
+            arr[i].children = this.getLvThreeArr(arr, arr[i].navId, [])
           }
         }
         return newArr

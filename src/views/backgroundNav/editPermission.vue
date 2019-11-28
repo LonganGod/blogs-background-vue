@@ -14,15 +14,15 @@
         <template v-for="(item, index) in ruleForm.permissionList">
           <el-row>
             <el-col :span="8">
-              <el-form-item :label="`权限名称${index + 1}：`" :prop="`permissionList.${index}.permissionsName`"
-                            :rules="rules.permissionsName">
-                <el-input v-model="item.permissionsName"></el-input>
+              <el-form-item :label="`权限名称${index + 1}：`" :prop="`permissionList.${index}.navName`"
+                            :rules="rules.navName">
+                <el-input v-model="item.navName"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="14">
-              <el-form-item :label="`权限路径${index + 1}：`" :prop="`permissionList.${index}.permissionsUrl`"
-                            :rules="rules.permissionsUrl">
-                <el-input v-model="item.permissionsUrl"></el-input>
+              <el-form-item :label="`权限路径${index + 1}：`" :prop="`permissionList.${index}.navJumpPage`"
+                            :rules="rules.navJumpPage">
+                <el-input v-model="item.navJumpPage"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -49,25 +49,25 @@
       'WSBreadcrumb': WSBreadcrumb
     },
     created() {
-      this.ruleForm.permissionsId = location.hash.split('?')[1].split('=')[1]
+      this.ruleForm.navId = location.hash.split('?')[1].split('=')[1]
       this.getData()
     },
     data() {
       return {
         linkArr: [
           {path: '', title: '基本设置'},
-          {path: '/config/permissionList', title: '权限分类列表'},
+          {path: '/config/backgroundNavList', title: '后台导航列表'},
           {path: '', title: '编辑权限'}
         ],
         ruleForm: {
-          permissionsId: null,
+          navId: null,
           permissionList: [],
         },
         rules: {
-          permissionsName: [
+          navName: [
             {required: true, message: `请输入权限分类名称`, trigger: 'blur'}
           ],
-          permissionsUrl: [
+          navJumpPage: [
             {required: true, message: `请输入跳转路径`, trigger: 'blur'}
           ]
         },
@@ -75,15 +75,15 @@
     },
     methods: {
       async getData() {
-        let {data} = await this.$axios.get('/api/permission/getPermissionListData', {
+        let {data} = await this.$axios.get('/api/backend/getPermissionListData', {
           params: {
-            id: this.ruleForm.permissionsId
+            id: this.ruleForm.navId
           }
         })
         if (data.code == 200) {
           this.ruleForm.permissionList = data.result.length == 0 ? [{
-            permissionsName: '',
-            permissionsUrl: ''
+            navName: '',
+            navJumpPage: ''
           }] : data.result
           console.log(data.result)
         }
@@ -92,13 +92,13 @@
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
             console.log(this.ruleForm)
-            let {data} = await this.$axios.post('/api/permission/editPermission', this.ruleForm)
+            let {data} = await this.$axios.post('/api/backend/editPermission', this.ruleForm)
             if (data.code == 200) {
               this.$message({
                 type: 'success',
                 message: '编辑成功'
               })
-              this.$router.push('/config/permissionList')
+              this.$router.push('/config/backgroundNavList')
             }
           }
         });
@@ -107,8 +107,8 @@
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
             this.ruleForm.permissionList.push({
-              permissionsName: '',
-              permissionsUrl: ''
+              navName: '',
+              navJumpPage: ''
             })
           }
         });

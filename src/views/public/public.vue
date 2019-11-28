@@ -51,7 +51,6 @@
   export default {
     name: "public",
     created() {
-      this.getNavData()
       this.getData()
     },
     data() {
@@ -73,23 +72,44 @@
           this.iconClass = 'el-icon-s-unfold'
         }
       },
-      async getNavData() {
-        let {data} = await this.$axios.get('/api/public/getBackendNavList')
-        if (data.code == 200) {
-          this.navList = data.result
-          console.log(data.result)
+      getNavList(arr, permissions) {
+        let len = arr.length
+        for (let i = 0; i < len; i++) {
+          if (arr[i].children.length == 0 && !permissions.includes(arr[i].navId)) {
+            arr.splice(i, 1)
+            i--
+            len--
+          } else if (arr[i].children.length != 0) {
+            arr[i].children = this.getNavList(arr[i].children, permissions)
+            if (arr[i].children.length == 0) {
+              arr.splice(i, 1)
+              i--
+              len--
+            }
+          }
         }
+        return arr
       },
       async getData() {
-        let {data} = await this.$axios.get('/api/public/getAdminData', {
+        let adminPermissions = []
+
+        let {data: adminData} = await this.$axios.get('/api/public/getAdminData', {
           params: {
             id: window.sessionStorage.getItem('adminId')
           }
         })
-        if (data.code == 200) {
-          console.log(data.result)
-          this.adminName = data.result.adminName
-          this.icon = data.result.adminIcon
+        if (adminData.code == 200) {
+          this.adminName = adminData.result.adminName
+          this.icon = adminData.result.adminIcon
+          adminPermissions = adminData.result.rolePermissions.split(',')
+          adminPermissions.forEach((item, index) => {
+            adminPermissions[index] = parseInt(item)
+          })
+        }
+
+        let {data: backendNav} = await this.$axios.get('/api/public/getBackendNavList')
+        if (backendNav.code == 200) {
+          this.navList = this.getNavList(backendNav.result, adminPermissions)
         }
       }
     }
