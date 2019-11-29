@@ -72,7 +72,7 @@
           this.iconClass = 'el-icon-s-unfold'
         }
       },
-      getNavList(arr, permissions) {
+      getPermissionList(arr, permissions) {
         let len = arr.length
         for (let i = 0; i < len; i++) {
           if (arr[i].children.length == 0 && !permissions.includes(arr[i].navId)) {
@@ -80,11 +80,28 @@
             i--
             len--
           } else if (arr[i].children.length != 0) {
-            arr[i].children = this.getNavList(arr[i].children, permissions)
+            arr[i].children = this.getPermissionList(arr[i].children, permissions)
             if (arr[i].children.length == 0) {
               arr.splice(i, 1)
               i--
               len--
+            }
+          }
+        }
+        return arr
+      },
+      getNavList(arr) {
+        let len = arr.length
+        if (len != 0) {
+          for (let i = 0; i < len; i++) {
+            if (arr[i].type == 0) {
+              arr.splice(i, 1)
+              i--
+              len--
+            } else {
+              if (arr[i].children.length != 0) {
+                arr[i].children = this.getNavList(arr[i].children)
+              }
             }
           }
         }
@@ -109,7 +126,8 @@
 
         let {data: backendNav} = await this.$axios.get('/api/public/getBackendNavList')
         if (backendNav.code == 200) {
-          this.navList = this.getNavList(backendNav.result, adminPermissions)
+          let navList = this.getPermissionList(backendNav.result, adminPermissions)
+          this.navList = this.getNavList(navList)
         }
       }
     }

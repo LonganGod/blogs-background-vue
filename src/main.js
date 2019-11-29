@@ -72,6 +72,32 @@ Vue.use(Steps);
 Vue.use(Step);
 Vue.use(Tree);
 
+axios.interceptors.request.use((config) => {
+  config.method == 'post' ? config.data = {
+    ...config.data,
+    adminId: window.sessionStorage.getItem('adminId')
+  } : config.params = {
+    ...config.params,
+    adminId: window.sessionStorage.getItem('adminId')
+  }
+  return config;
+}, (error) => {
+  console.log(err)
+  return Promise.reject(error);
+});
+axios.interceptors.response.use((response) => {
+  if (response.data.code == 202) {
+    Message({
+      type: 'warning',
+      message: '对不起，您没有该权限！'
+    })
+  }
+  return response;
+}, (error) => {
+  console.log(err)
+  return Promise.reject(error);
+});
+
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
