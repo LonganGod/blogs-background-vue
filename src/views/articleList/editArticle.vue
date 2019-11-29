@@ -55,9 +55,11 @@
         <el-form-item label="配图：" prop="articleImg">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="/api/imgUploads"
             :on-remove="updateImgRemove"
+            :on-success="updateImgSuccess"
             :file-list="formData.articleImg"
+            name="articleImg"
             list-type="picture">
             <el-button size="small" type="warning" plain>点击上传</el-button>
           </el-upload>
@@ -97,7 +99,13 @@
           {path: '/article/articleList', title: '文章列表'},
           {path: '', title: '编辑'},
         ],
-        formData: {},
+        formData: {
+          articleName: '',
+          cate: '',
+          tags: [],
+          articleImg: [],
+          article: ''
+        },
         rules: {
           name: [
             {required: true, message: '请输入活动名称', trigger: 'blur'},
@@ -151,6 +159,7 @@
         });
         if (data.code == 200) {
           this.formData = data.result
+          console.log(this.formData)
           this.getLabel(data.result.articleLabel)
         }
       },
@@ -169,16 +178,6 @@
         if (data.code == 200) {
           this.cateList = data.result
         }
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
       },
       submitForm(formName, status) {
         if (this.formData.article == '') {
@@ -201,7 +200,7 @@
           params.articleLabel.push(this.formData.labelsList[i].labelId)
         }
         for (let i = 0; i < this.formData.articleImg.length; i++) {
-          params.articleImg.push(this.formData.articleImg[i].url)
+          params.articleImg.push(this.formData.articleImg[i].response ? this.formData.articleImg[i].response.path : this.formData.articleImg[i].url)
         }
 
         this.$refs[formName].validate(async (valid) => {
@@ -246,7 +245,7 @@
       updateImgRemove(file, fileList) {
         for (let i = 0; i < this.formData.articleImg.length; i++) {
           if (this.formData.articleImg[i].uid == file.uid) {
-            this.formData.articleImg.pop(this.formData.articleImg[i])
+            this.formData.articleImg.splice(i, 1)
           }
         }
       },

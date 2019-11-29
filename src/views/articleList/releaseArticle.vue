@@ -164,7 +164,7 @@
           params.articleLabel.push(this.ruleForm.tags[i].labelId)
         }
         for (let i = 0; i < this.ruleForm.imgs.length; i++) {
-          params.articleImg.push(this.ruleForm.imgs[i].url)
+          params.articleImg.push(this.ruleForm.imgs[i].response.path)
         }
 
         this.$refs[formName].validate(async (valid) => {
@@ -209,7 +209,7 @@
       updateImgRemove(file, fileList) {
         for (let i = 0; i < this.ruleForm.imgs.length; i++) {
           if (this.ruleForm.imgs[i].uid == file.uid) {
-            this.ruleForm.imgs.pop(this.ruleForm.imgs[i])
+            this.ruleForm.imgs.imgs.splice(i, 1)
           }
         }
       },

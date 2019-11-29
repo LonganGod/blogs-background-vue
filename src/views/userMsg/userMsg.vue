@@ -48,7 +48,7 @@
         <el-table-column
           label="评论文章"
           prop="article"
-          width="250">
+          width="350">
         </el-table-column>
         <el-table-column
           label="评论时间"
@@ -129,7 +129,7 @@
             obj.index = i + 1 + (this.pageList * (this.currentPage - 1));
             obj.nickName = item.nickName;
             obj.msgDetail = item.msgDetail;
-            obj.article = '相关文章';
+            obj.article = item.articleTitle;
             obj.createTime = item.createTime;
             obj.reply = item.reply;
             this.tableData.push(obj)

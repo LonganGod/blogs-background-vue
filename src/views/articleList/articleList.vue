@@ -32,6 +32,7 @@
       <el-table :data="tableData" row-key="id" border stripe>
         <el-table-column prop="index" label="序号" width="80" align="center" sortable></el-table-column>
         <el-table-column prop="articleTitle" label="文章标题"></el-table-column>
+        <el-table-column prop="adminName" label="作者" width="150"></el-table-column>
         <el-table-column prop="cateName" label="所属分类" width="250"></el-table-column>
         <el-table-column prop="articleLabel" label="标签" width="300" align="center">
           <template slot-scope="scope">
