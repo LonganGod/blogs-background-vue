@@ -5,6 +5,9 @@ import EditPermission from '../../views/backgroundNav/editPermission'
 import RoleList from '../../views/role/roleList'
 import AddRole from '../../views/role/addRole'
 import EditRole from '../../views/role/editRole'
+import FrontDeskNavList from '../../views/frontDeskNav/frontDeskNavList'
+import AddFrontDeskNav from '../../views/frontDeskNav/addFrontDeskNav'
+import EditFrontDeskNav from '../../views/frontDeskNav/editFrontDeskNav'
 
 export default [
   {
@@ -41,5 +44,20 @@ export default [
     name: 'EditPermission',
     path: '/config/editPermission',
     component: EditPermission
+  },
+  {
+    name: 'FrontDeskNavList',
+    path: '/config/frontDeskNavList',
+    component: FrontDeskNavList
+  },
+  {
+    name: 'AddFrontDeskNav',
+    path: '/config/addFrontDeskNav',
+    component: AddFrontDeskNav
+  },
+  {
+    name: 'EditFrontDeskNav',
+    path: '/config/editFrontDeskNav',
+    component: EditFrontDeskNav
   },
 ]

@@ -64,6 +64,14 @@
             <el-button size="small" type="warning" plain>点击上传</el-button>
           </el-upload>
         </el-form-item>
+        <el-form-item label="摘要：" prop="articleAbstract">
+          <el-input
+            type="textarea"
+            autosize
+            placeholder="请输入内容"
+            v-model="formData.articleAbstract">
+          </el-input>
+        </el-form-item>
         <el-form-item label="正文：" prop="articleContent">
           <Editor @input="editorChange" :articleContent="formData.articleContent"/>
         </el-form-item>
@@ -104,30 +112,19 @@
           cate: '',
           tags: [],
           articleImg: [],
+          articleAbstract: '',
           article: ''
         },
         rules: {
-          name: [
-            {required: true, message: '请输入活动名称', trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          articleTitle: [
+            {required: true, message: '请输入文章标题', trigger: 'blur'},
+            {min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur'}
           ],
-          region: [
-            {required: true, message: '请选择活动区域', trigger: 'change'}
+          articleCate: [
+            {required: true, message: '请选择文章分类', trigger: 'change'}
           ],
-          date1: [
-            {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
-          ],
-          date2: [
-            {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
-          ],
-          type: [
-            {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
-          ],
-          resource: [
-            {required: true, message: '请选择活动资源', trigger: 'change'}
-          ],
-          desc: [
-            {required: true, message: '请填写活动形式', trigger: 'blur'}
+          articleAbstract: [
+            {required: true, message: '请输入文章摘要', trigger: 'blur'}
           ]
         },
         // 文章类别
@@ -193,6 +190,7 @@
           articleCate: this.formData.articleCate[1],
           articleLabel: [],
           articleImg: [],
+          articleAbstract: this.formData.articleAbstract,
           articleContent: this.formData.articleContent,
           status: status
         }

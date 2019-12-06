@@ -64,6 +64,14 @@
             <el-button size="small" type="warning" plain>点击上传</el-button>
           </el-upload>
         </el-form-item>
+        <el-form-item label="摘要：" prop="articleAbstract">
+          <el-input
+            type="textarea"
+            autosize
+            placeholder="请输入内容"
+            v-model="ruleForm.articleAbstract">
+          </el-input>
+        </el-form-item>
         <el-form-item label="正文：" prop="article">
           <Editor @input="editorChange"/>
         </el-form-item>
@@ -101,6 +109,7 @@
           cate: '',
           tags: [],
           imgs: [],
+          articleAbstract: '',
           article: ''
         },
         rules: {
@@ -110,6 +119,9 @@
           ],
           cate: [
             {required: true, message: '请选择文章分类', trigger: 'change'}
+          ],
+          articleAbstract: [
+            {required: true, message: '请输入文章摘要', trigger: 'blur'}
           ]
         },
         // 文章类别
@@ -157,6 +169,7 @@
           articleCate: this.ruleForm.cate[1],
           articleLabel: [],
           articleImg: [],
+          articleAbstract: this.ruleForm.articleAbstract,
           articleContent: this.ruleForm.article,
           status: status
         }
